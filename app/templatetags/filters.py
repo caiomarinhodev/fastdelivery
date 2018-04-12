@@ -64,7 +64,7 @@ def calcula_media_aval(loja):
             media = media + int(aval.nota)
         return float(float(media) / float(avals.count()))
     except (Exception,):
-        return 4.0
+        return 5.0
 
 
 @register.filter
