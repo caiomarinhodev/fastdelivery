@@ -4,6 +4,7 @@
 
 {% block content %}
     <style>
+
         .bg-red {
             color: red;
         {#background-color: red;#}
@@ -14,13 +15,18 @@
         {#background-color: green;#}
         }
 
-        @media only screen and (min-width: 680px) {
-            .thumbnail {
-                height: 180px;
-                width: 180px;
-            }
+        @media only screen and (min-width: 991px) {
+{#            .thumbnail {#}
+{#                height: 180px;#}
+{#                width: 180px;#}
+{#            }#}
         }
 
+        @media (max-width: 990px) {
+            .thumbs {
+                height: 250px;
+            }
+        }
 
 
     </style>
@@ -102,7 +108,7 @@
                                                     {% if produto.disponivel %}
                                                         <form method="post"
                                                               action="{% url 'add_cart' loja.id %}">{% csrf_token %}
-                                                            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+                                                            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3"
                                                                  style="margin-bottom: 50px;">
                                                                 <a
                                                                         {% if user.cliente %}
@@ -116,7 +122,7 @@
                                                                         {% endif %}
 
                                                                 >
-                                                                    <div class="thumbnail">
+                                                                    <div class="thumbnail thumbs">
                                                                         <img title="{{ produto.nome }}"
                                                                              alt="{{ produto.nome }}"
                                                                              src="{{ produto.fotoproduto_set.first }}"

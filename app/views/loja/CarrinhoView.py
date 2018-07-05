@@ -131,6 +131,17 @@ class FinalizaRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
         return super(FinalizaRequest, self).get(request, *args, **kwargs)
 
 
+class CarrinhoReqView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 'loja/carrinho.html'
+    login_url = '/define/login/'
+
+    def get(self, request, *args, **kwargs):
+        if not check_loja_is_online(self.request):
+            messages.error(self.request, u'A Loja não está mais online para receber pedidos.')
+            return redirect('/')
+        return super(CarrinhoReqView, self).get(request, *args, **kwargs)
+
+
 def submit_pedido(request):
     data = request.POST
     endereco = None

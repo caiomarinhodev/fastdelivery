@@ -19,16 +19,6 @@ from app.models import Bairro, Configuration, Estabelecimento, Request, ItemPedi
 
 from rest_framework.permissions import DjangoObjectPermissions
 
-OPTIONS_METHOD = 'OPTIONS'
-
-class DjangoObjectPermissionsOrOptions(DjangoObjectPermissions):
-    def has_permission(self, request, view):
-        if request.method == OPTIONS_METHOD:
-            return True
-        else:
-            return super(DjangoObjectPermissions, self).has_permission(request, view)
-
-
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -38,7 +28,6 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-# @permission_classes((AllowAny, ))
 class BairroViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.

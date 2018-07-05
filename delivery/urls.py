@@ -31,7 +31,7 @@ from app.views.PedidoView import PedidosMotoristaListView, \
 from app.views.RelatorioView import RelatorioTemplateView, DashboardReportViewUser, TimelineView, PromocaoListView
 from app.views.loja.AvaliacaoView import AvaliacaoView, add_avaliacao
 from app.views.loja.CarrinhoView import add_cart, FinalizaRequest, AcompanharRequest, submit_pedido, MeusRequests, \
-    remove_cart
+    remove_cart, CarrinhoReqView
 from app.views.loja.HomeView import HomeView, LojaProdutosListView, SetOnlineView, script, bootstrap, SobreView
 from app.views.loja.LoginView import ClienteLoginView
 from app.views.loja.LoginView import EscolheLoginView, RegistroCliente
@@ -177,6 +177,9 @@ urlpatterns = [
 
     url(r'finalizar-pedido/(?P<pk_pedido>[0-9]+)/$', finalizar_pedido, name="finalizar_pedido"),
 
+
+
+
     url(r'send-location/(-?\d+\.\d+)/(-?\d+\.\d+)/$', send_position_motorista, name="send_position_motorista"),
 
     url(r'get-location/(?P<pk_user>[0-9]+)/$', get_position_motorista, name=" get_position_motorista"),
@@ -277,6 +280,7 @@ urlpatterns = [
 
     url(r'^add-cart/(?P<id_loja>[0-9]+)/$', add_cart, name='add_cart'),
     url(r'finaliza-pedido/$', FinalizaRequest.as_view(), name='finaliza_pedido'),
+    url(r'carrinho/$', CarrinhoReqView.as_view(), name="meu-carrinho"),
     url(r'acompanhar-pedido/(?P<pk>[0-9]+)/$', AcompanharRequest.as_view(), name='acompanhar_pedido'),
     url(r'submit-pedido/$', submit_pedido, name='submit_pedido'),
     url(r'^notificacao/pedido/$', notificacao_pedido, name="notificacao_pedido"),

@@ -1,10 +1,106 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'loja/base.html' %}
+{% load staticfiles %}
+{% load filters %}
 
-</body>
-</html>
+{% block content %}
+    <style>
+        .bg-red {
+            color: red;
+        {#background-color: red;#}
+        }
+
+        .bg-green {
+            color: green;
+        {#background-color: green;#}
+        }
+
+        @media only screen and (min-width: 680px) {
+            .thumbnail {
+                height: 180px;
+                width: 180px;
+            }
+        }
+
+
+    </style>
+    {#    {% include 'carrossel.html' %}#}
+    <section class="bar background-white no-mb">
+        <div class="container">
+            <div class="heading text-center">
+                <h2>Sua Praça de Alimentação Online!</h2>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="box box-info">
+                                <div class="box-header with-border">
+                                    <h4 class="box-title">Meu pedido</h4>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Produto</th>
+                                                        <th>Preço</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for itempedido in pedido_obj.itempedido_set.all %}
+                                                        <tr>
+                                                            <td>{{ itempedido.produto.nome }}</td>
+                                                            <td>R$ {{ itempedido.valor_total|floatformat:2 }}</td>
+                                                            <td>
+                                                                <a href="{% url 'delete_request' pedido_obj.pk %}"><i
+                                                                        class="fa fa-close"></i></a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    <tr class="subtotal">
+                                                        <th>Subtotal</th>
+                                                        {% if pedido_obj %}
+                                                            <th>R$ {{ pedido_obj.subtotal|floatformat:2 }}</th>
+                                                        {% endif %}
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger
+                                                {% if not pedido_obj.estabelecimento.is_online or not pedido_obj.itempedido_set.first %}
+                                                disabled
+                                                {% endif %}
+                                                "
+                                                            {% if not pedido_obj.estabelecimento.is_online or not pedido_obj.itempedido_set.first %}
+                                                            disabled="disabled"
+                                                            {% endif %}
+                                                    >Finalizar Pedido
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#inicio').addClass('active');
+        });
+    </script>
+
+{% endblock %}

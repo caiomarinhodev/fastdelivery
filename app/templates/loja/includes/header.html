@@ -30,20 +30,18 @@
                         {% endif %}
                         <div class="row text-center">
                             <div class="col-md-8 col-md-offset-2 ">
-                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}
-                                    <a href="{% url "auth_logout" %}" style=""><i class="fa fa-sign-in"></i>
-                                        <span class="text-uppercase">Log out</span></a>
-                                {% else %}
-                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger
-                                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}
-                                                disabled
-                                                {% endif %}
-                                                "
-                                            {% if not loja.is_online or not pedido_obj.itempedido_set.first %}
-                                       disabled="disabled"
-                                            {% endif %}
-                                    >Finalizar Compra</a>
-                                {% endif %}
+
+                                    <a href="{% url 'meu-carrinho' %}" class="btn btn-danger">
+                                        <i class="fa fa-shopping-cart"></i>Carrinho</a>
+{#                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger#}
+{#                                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+{#                                                disabled#}
+{#                                                {% endif %}#}
+{#                                                "#}
+{#                                            {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+{#                                       disabled="disabled"#}
+{#                                            {% endif %}#}
+{#                                    >Finalizar Compra</a>#}
 
                             </div>
                         </div>
