@@ -68,7 +68,7 @@
                         {% for loja in lojas_off %}
                             {% if loja.configuration.has_loja_online %}
                                 <a href="{% url 'view_loja' loja.pk %}">
-                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                                    <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
                                         <div class="thumbnail text-center">
 
                                             <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"
