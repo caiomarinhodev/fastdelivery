@@ -136,9 +136,6 @@ class CarrinhoReqView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
     login_url = '/define/login/'
 
     def get(self, request, *args, **kwargs):
-        if not check_loja_is_online(self.request):
-            messages.error(self.request, u'A Loja não está mais online para receber pedidos.')
-            return redirect('/')
         return super(CarrinhoReqView, self).get(request, *args, **kwargs)
 
 

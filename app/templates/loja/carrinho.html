@@ -60,6 +60,11 @@
                                                                         class="fa fa-close"></i></a>
                                                             </td>
                                                         </tr>
+
+                                                    {% empty %}
+                                                        <tr>
+                                                        <td colspan="3"><h3>Seu carrinho está vazio!</h3></td>
+                                                        </tr>
                                                     {% endfor %}
                                                     <tr class="subtotal">
                                                         <th>Subtotal</th>
@@ -79,7 +84,7 @@
                                                 {% endif %}
                                                 "
                                                             {% if not pedido_obj.estabelecimento.is_online or not pedido_obj.itempedido_set.first %}
-                                                            disabled="disabled"
+                                                       disabled="disabled"
                                                             {% endif %}
                                                     >Finalizar Pedido
                                                     </a>
