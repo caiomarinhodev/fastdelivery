@@ -25,3 +25,5 @@ django-progressive-web-app
 djangorestframework
 markdown
 django-filter
+django-cors-headers
+
