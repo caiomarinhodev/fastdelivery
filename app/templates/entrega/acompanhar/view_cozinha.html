@@ -68,6 +68,36 @@
                                         </div>
                                     </div>
                                     <hr/>
+                                    {% if entrega.pedido.request_set.first %}
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <i class="fa fa-location-arrow"></i> {{ entrega.full_address }}
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-xs-4">
+                                                <i class="fa fa-dollar"></i> {{ entrega.pedido.valor_total|floatformat:2 }}
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <i class="fa fa-money-bill"></i> {{ entrega.pedido.request_set.first.forma_pagamento }}
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <i class="fa fa-retweet"></i> {{ entrega.pedido.request_set.first.troco }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="row">
+                                            <div class="pull-left">
+                                                <i class="fa fa-location-arrow"></i> {{ entrega.full_address }}
+                                            </div>
+                                            <div class="pull-right">
+                                                <i class="fa fa-dollar"></i> {{ entrega.pedido.valor_total|floatformat:2 }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    <hr/>
                                     <div class="row">
                                         <div class="col-xs-6 col-xs-3">
                                             {% if entrega.is_prepared %}
@@ -96,7 +126,7 @@
                                                 <div class="input-group">
                                                     <div class="input-group-append">
                                                         <div class="input-group margin">
-                                                       <span class="input-group-addon">Fixos :</span>
+                                                            <span class="input-group-addon">Fixos :</span>
                                                             <select class="form-control input-group-addon"
                                                                     name="motoboy"
                                                                     id="motoboy">
@@ -162,7 +192,7 @@
                     </div>
                 </div>
             </div>
-            {% empty %}
+        {% empty %}
             <div class="col-xs-8 col-xs-offset-2">
                 <div class="col-xs-12">
                     <h3>Não há pedidos no momento...</h3>
@@ -184,21 +214,21 @@
             }, 25000);
         });
 
-        window.setInterval(function () {
-            $.ajax({
-                url: "{% url 'notificacao_cozinha' %}",
-                type: "GET", // http method
-                success: function (data) {
-                    $('#notify').html(data);
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-                error: function (err) {
-                    console.log(err);
-                }
-            });
-        }, 10000);
+        {#        window.setInterval(function () {#}
+        {#            $.ajax({#}
+        {#                url: "{% url 'notificacao_cozinha' %}",#}
+        {#                type: "GET", // http method#}
+        {#                success: function (data) {#}
+        {#                    $('#notify').html(data);#}
+        {#                },#}
+        {#                complete: function () {#}
+        {#                    $('#loading').hide();#}
+        {#                },#}
+        {#                error: function (err) {#}
+        {#                    console.log(err);#}
+        {#                }#}
+        {#            });#}
+        {#        }, 10000);#}
 
         window.setInterval(function () {
             $.ajax({

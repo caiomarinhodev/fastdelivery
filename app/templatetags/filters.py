@@ -188,7 +188,7 @@ def make_obs(ponto):
             if 'valor_total' in req and req.valor_total:
                 message += '<li>Valor Total: ' + floatformat(str(req.valor_total), 2) + ' </li>'
             if 'troco' in req and req.troco:
-                message += '<li>Troco para: ' + req.troco +'</li>'
+                message += '<li>Troco para: ' + req.troco + '</li>'
             message += '<li>Forma de Pagamento: ' + str(req.forma_pagamento) + ' </li>'
             message += '</ul></p>'
         except (Exception,):
@@ -263,6 +263,7 @@ def ganhos_hoje(motorista):
     except (Motorista.DoesNotExist, Exception):
         return 0.0
 
+
 @register.filter
 def get_valor_vendas(requests):
     try:
@@ -280,10 +281,9 @@ def get_ticket_medio(requests):
         ganho = 0.0
         for req in requests:
             ganho = float(req.subtotal) + float(ganho)
-        return float(ganho/float(len(requests)))
+        return float(ganho / float(len(requests)))
     except (Exception,):
         return 0.0
-
 
 
 @register.filter
@@ -626,3 +626,18 @@ def lojas_online(user):
         return len(Estabelecimento.objects.filter(is_online=True))
     except (ValueError, ZeroDivisionError, Exception):
         return 0
+
+
+@register.filter
+def has_motoboy(lista, user):
+    try:
+        value = False
+        for mt in lista:
+            print(mt.user.id)
+            print(user.id)
+            print(mt.user.id == user.id)
+            if mt.user.id == user.id:
+                value = True
+        return value
+    except (ValueError, ZeroDivisionError, Exception):
+        return False
