@@ -4,7 +4,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 
-from app.models import Estabelecimento
+from app.models import Estabelecimento, Produto, Grupo
 from app.views.mixins.Mixin import LojaFocusMixin
 
 
@@ -32,3 +32,11 @@ class ListProducts(DetailView, LojaFocusMixin):
     def get(self, request, *args, **kwargs):
         self.request.session['lojaid'] = self.get_object().pk
         return super(ListProducts, self).get(request, *args, **kwargs)
+
+
+# Class para ver os opcionais do grupo do produto selecionado
+class GroupView(DetailView, LojaFocusMixin):
+    template_name = ''
+    context_object_name = 'grupo'
+    model = Grupo
+    pk_url_kwarg = 'pk'
