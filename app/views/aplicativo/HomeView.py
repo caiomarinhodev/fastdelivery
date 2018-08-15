@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import InvalidPage, Paginator, PageNotAnInteger, EmptyPage
-from django.http import Http404
 from django.views.generic import ListView, DetailView
 
 from app.models import Estabelecimento, Produto, Grupo
@@ -15,6 +13,11 @@ class ListLojas(LoginRequiredMixin, ListView, LojaFocusMixin):
     template_name = 't_app/lojas.html'
     context_object_name = 'lojas'
     model = Estabelecimento
+
+    def get(self, request, *args, **kwargs):
+        if 'checks' in self.request.session:
+            self.request.session['checks'] = []
+        return super(ListLojas, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         kwargs['lojas_off'] = Estabelecimento.objects.filter(is_online=False, is_approved=True).order_by('?')
@@ -31,13 +34,25 @@ class ListProducts(LoginRequiredMixin, DetailView, LojaFocusMixin):
     model = Estabelecimento
     pk_url_kwarg = 'pk'
 
+    def insert_in_session(self, array):
+        check_session = self.request.session['checks']
+        for e in array:
+            if e not in check_session:
+                check_session.append(e)
+        self.request.session['checks'] = check_session
+
     def get(self, request, *args, **kwargs):
+        if 'checks' in self.request.session:
+            if 'checks' in request.GET:
+                self.insert_in_session(request.GET.getlist('checks'))
+            print(self.request.session['checks']) # Aqui deve ser processado o ADD_CART
+            self.request.session['checks'] = []
         self.request.session['lojaid'] = self.get_object().pk
         return super(ListProducts, self).get(request, *args, **kwargs)
 
 
-# Paginar os grupos de um determinado produto, e a medida que o usuario seleciona um item, o
-# sistema guarda o item(s) escolhidos daquele grupo e ao fim da paginacao, mostrar botao adicionar ao carrinho.
+# Paginar os grupos de um determinado produto (OK), e a medida que o usuario seleciona um item, o
+# sistema guarda o item(s) escolhidos daquele grupo (OK) e ao fim da paginacao, mostrar botao adicionar ao carrinho.
 # Caso não haja grupos nem opcionais, mostrar direto o botao, e ir para o carrinho ao final.
 
 # page_number, paginator.num_pages, page, page_range
@@ -53,6 +68,11 @@ class ProductView(LoginRequiredMixin, DetailView, LojaFocusMixin):
     model = Produto
     pk_url_kwarg = 'pk'
 
+    def get(self, request, *args, **kwargs):
+        if 'checks' in self.request.session:
+            self.request.session['checks'] = []
+        return super(ProductView, self).get(request, *args, **kwargs)
+
 
 class ChooseGroupListView(LoginRequiredMixin, LojaFocusMixin, ListView):
     context_object_name = 'grupos'
@@ -67,6 +87,7 @@ class ChooseGroupListView(LoginRequiredMixin, LojaFocusMixin, ListView):
         for e in array:
             if e not in check_session:
                 check_session.append(e)
+        self.request.session['checks'] = check_session
 
     def get(self, request, *args, **kwargs):
         if self.kwargs.get(self.page_kwarg) == '1':

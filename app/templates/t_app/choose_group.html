@@ -113,7 +113,7 @@
                                                     location.href = "?page={{ page_obj.next_page_number }}" + add;
                                                 {% else %}
                                                     // ver proximo passo apos ultimo escolha.
-                                                    location.href = "{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}";
+                                                    location.href = "{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}" +"?"+ add;
                                                 {% endif %}
 
                                             }
