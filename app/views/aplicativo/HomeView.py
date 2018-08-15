@@ -34,9 +34,22 @@ class ListProducts(DetailView, LojaFocusMixin):
         return super(ListProducts, self).get(request, *args, **kwargs)
 
 
+# Paginar os grupos de um determinado produto, e a medida que o usuario seleciona um item, o
+# sistema guarda o item(s) escolhidos daquele grupo e ao fim da paginacao, mostrar botao adicionar ao carrinho.
+# Caso não haja grupos nem opcionais, mostrar direto o botao, e ir para o carrinho ao final.
+
+# page_number, paginator.num_pages, page, page_range
+
+# No Carrinho, implementar 2 botoes, finalizar pedido e continuar comprando. Para continuar comprando, voltar para a
+# loja, e em finaizar pedido, navegar para tela de cadastro ou selecao de enderecos -> forma de pagamento -> acompanhar.
+
 # Class para ver os opcionais do grupo do produto selecionado
-class GroupView(DetailView, LojaFocusMixin):
+class GroupListView(ListView, LojaFocusMixin):
     template_name = ''
+    paginate_by = 1
     context_object_name = 'grupo'
     model = Grupo
     pk_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        return Grupo.objects.filter(produto_id=self.kwargs.get(self.page_kwarg))
