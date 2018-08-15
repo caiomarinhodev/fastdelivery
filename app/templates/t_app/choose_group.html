@@ -1,0 +1,169 @@
+{% extends 't_app/base.html' %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block content %}
+    <form method="get"
+            {% if page_obj.has_next %}
+          action="?page={{ page_obj.next_page_number }}"
+            {% else %}
+          action="{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}"
+            {% endif %}
+
+
+    >
+        {% csrf_token %}
+        {% for grupo in grupos %}
+            <div class="cart-page">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="section-title">{{ grupo.titulo }}</div>
+                        </div>
+                    </div>
+                    {#                <div class="row">#}
+                    {#                    <div class="col s12">#}
+                    {#                        <div class="checkout-payable">#}
+                    {#                            <div class="cart-cp cart-total-payable">#}
+                    {#                                <div class="cp-left">Produto:</div>#}
+                    {#                                <div class="cp-right">{{ grupo.produto.nome }}</div>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    {#                </div>#}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="payment-method-wrap ck-box">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div style="margin: 0px 0px 10px">
+                                            {% if grupo.obrigatoriedade %}
+                                                Escolha um item obrigatoriamente:
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% for opcional in grupo.opcional_set.all|order_by:'created_at' %}
+                                    {% if opcional.disponivel %}
+                                        <div class="row">
+                                            <div class="col s12 m12 l12 ">
+                                                <p>
+                                                    <input class="with-gap"
+                                                           type="checkbox"
+                                                           name="checks"
+                                                           data-limitador-{{ grupo.pk }}="{{ grupo.limitador }}"
+                                                           id="{{ opcional.id }}"
+                                                           data-value="{{ opcional.valor }}"
+                                                           onclick="return keepcoun{{ grupo.pk }}t();"
+                                                           value="{{ opcional.id }}"/>
+                                                    <label for="{{ opcional.id }}">
+                                                        {{ opcional.nome }}
+                                                        (
+                                                        {% if opcional.descricao %}
+                                                            {{ opcional.descricao }
+                                                        {% endif %}
+                                                        +R$ {{ opcional.valor |floatformat:2 }})
+
+                                                    </label>
+
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            var arr_checks = [];
+                                            function get_request(array) {
+                                                var add = "";
+                                                for (var i = 0; i < array.length; i++) {
+                                                    add += "&checks=" + array[i];
+                                                }
+                                                return add;
+                                            }
+
+
+                                            function keepcoun{{ grupo.pk }}t() {
+                                                arr_checks = [];
+                                                var inputTags_{{ grupo.pk }} = $('input[data-limitador-{{ grupo.pk }}={{ grupo.limitador }}]');
+                                                var total_{{ grupo.pk }} = 0;
+                                                for (var i = 0; i < inputTags_{{ grupo.pk }}.length; i++) {
+
+                                                    if (inputTags_{{ grupo.pk }}[i].checked) {
+                                                        arr_checks.push(inputTags_{{ grupo.pk }}[i].value);
+                                                        total_{{ grupo.pk }} = total_{{ grupo.pk }} + 1;
+                                                    } else {
+                                                        arr_checks = arr_checks.filter(function (id) {
+                                                            return id !== inputTags_{{ grupo.pk }}[i].value;
+                                                        });
+                                                    }
+
+                                                    if (total_{{ grupo.pk }} > parseInt({{ grupo.limitador }})) {
+                                                        swal('Escolha apenas {{ grupo.limitador }} opcionais', '', 'warning');
+                                                        inputTags_{{ grupo.pk }}[i].checked = false;
+                                                        arr_checks = arr_checks.filter(function (id) {
+                                                            return id !== inputTags_{{ grupo.pk }}[i].value;
+                                                        });
+                                                        return false;
+                                                    }
+                                                }
+                                                console.log(arr_checks);
+                                            }
+
+                                            function sub() {
+                                                var add = get_request(arr_checks);
+                                                {% if page_obj.has_next %}
+                                                    location.href = "?page={{ page_obj.next_page_number }}" + add;
+                                                {% else %}
+                                                    // ver proximo passo apos ultimo escolha.
+                                                    location.href = "{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}";
+                                                {% endif %}
+
+                                            }
+                                        </script>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <br>
+                            <br>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="container">
+            <div class="row">
+                <div class="input-field col s12 m12 l12 center">
+                    <div class="row">
+                        <div class="col s12">
+                            <ul class="pagination">
+                                <li>
+                                    {% if not page_obj.has_previous %}
+                                        <a href="{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}"><i
+                                                class="material-icons">chevron_left</i></a>
+                                    {% else %}
+                                        <a href="?page={{ page_obj.previous_page_number }}"><i
+                                                class="material-icons">chevron_left</i></a>
+
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    Página {{ page_obj.number }} de {{ paginator.num_pages }}.
+                                </li>
+                                <li>
+                                    {% if not page_obj.has_next %}
+                                        <a href="#" onclick="sub();"><i
+                                                class="material-icons">chevron_right</i></a>
+
+                                    {% else %}
+                                        <a id="a_sub" onclick="sub();"><i
+                                                class="material-icons">chevron_right</i>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

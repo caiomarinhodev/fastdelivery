@@ -16,6 +16,19 @@ def check_same_store(id_loja, pedido):
     return False
 
 
+def get_item_pedido_default(pedido, produto, obs):
+    itempedido = ItemPedido(pedido=pedido, quantidade='1', produto=produto, observacoes=obs)
+    itempedido.save()
+
+
+def insert_optionals_item_pedido(checks, itempedido=None):
+    for id in checks:
+        opc = Opcional.objects.get(id=id)
+        opcc = OpcionalChoice(opcional=opc, item_pedido=itempedido)
+        opcc.save()
+    itempedido.save()
+
+
 def cria_item_pedido(checks, pedido, produto, obs):
     itempedido = ItemPedido(pedido=pedido, quantidade='1', produto=produto, observacoes=obs)
     itempedido.save()

@@ -40,16 +40,18 @@
                                     {% for produto in cat.produto_set.all %}
                                         {% if produto.disponivel %}
                                             <div>
-                                                <a href="#">
+                                                <a href="{% url 'view_product_app' produto.id %}">
                                                     <div class="col s6 m4 l3 col-produc">
                                                         <div class="box-product">
                                                             <div class="bp-top">
                                                                 <div class="product-list-img">
                                                                     <div class="pli-one">
                                                                         <div class="pli-two">
-                                                                            <img title="{{ produto.nome }}"
-                                                                                 alt="{{ produto.nome }}"
-                                                                                 src="{{ produto.fotoproduto_set.first }}">
+                                                                            <a href="{% url 'view_product_app' produto.id %}">
+                                                                                <img title="{{ produto.nome }}"
+                                                                                     alt="{{ produto.nome }}"
+                                                                                     src="{{ produto.fotoproduto_set.first }}">
+                                                                            </a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -63,8 +65,8 @@
                                                                 {#                                                                <div class="stock-item">Only available 4 item</div>#}
                                                             </div>
                                                             <div class="bp-bottom">
-                                                                <a href="#"
-                                                                   class="btn button-add-cart">+ Comprar</a>
+                                                                <a href="{% url 'view_product_app' produto.id %}"
+                                                                   class="btn button-add-cart"> Comprar</a>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -29,6 +29,7 @@
           href="{% static 'gromart/node_modules/slick-carousel/slick/slick-theme.css' %}">
     <!-- Magnific Popup core CSS file -->
     <link rel="stylesheet" href="{% static 'gromart/node_modules/magnific-popup/dist/magnific-popup.css' %}">
+    <link href="{% static 'css/sweetalert.min.css' %}" rel="stylesheet">
 </head>
 <body id="homepage">
 <!-- BEGIN PRELOADING -->
@@ -67,5 +68,26 @@
 <script src="{% static 'gromart/node_modules/slick-carousel/slick/slick.min.js' %}"></script>
 <!-- Custom script -->
 <script src="{% static 'gromart/js/custom.js' %}"></script>
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <script>
+                $(document).ready(function () {
+                    swal("Ops...", "{{ message|safe }}", "error")
+                });
+            </script>
+        {% else %}
+            <script>
+                $(document).ready(function () {
+                    swal("Sucesso", "{{ message|safe }}", "success")
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 </body>
 </html>

@@ -1,0 +1,58 @@
+{% extends 't_app/base.html' %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block content %}
+    <style>
+        .pg-product-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ff8700;
+        }
+    </style>
+
+    <div class="card">
+        <div class="card-image waves-effect waves-block waves-light">
+            <img title="{{ produto.nome }}"
+                 alt="{{ produto.nome }}"
+                 src="{{ produto.fotoproduto_set.first }}">
+        </div>
+        <div class="card-content">
+            <div class="row">
+                <div class="col s12">
+                    <div class="name-price">
+                        <div class="pg-product-name">{{ produto.nome }}</div>
+                        <div class="pg-product-price"> R$ {{ produto.preco_base|floatformat:2 }}</div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-reveal">
+            <div class="desciption-product">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12">
+                            {{ produto.descricao }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="qty-total-price">
+        <div class="container">
+            <div class="row">
+                <div class="col s3">
+                </div>
+                <div class="col s6">
+                    <div class="qty-buy">
+                        <a href="{% url 'choose_grupos_app' produto.id %}" class="btn button-add-cart">COMPRAR</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
