@@ -34,19 +34,7 @@ class ListProducts(LoginRequiredMixin, DetailView, LojaFocusMixin):
     model = Estabelecimento
     pk_url_kwarg = 'pk'
 
-    def insert_in_session(self, array):
-        check_session = self.request.session['checks']
-        for e in array:
-            if e not in check_session:
-                check_session.append(e)
-        self.request.session['checks'] = check_session
-
     def get(self, request, *args, **kwargs):
-        if 'checks' in self.request.session:
-            if 'checks' in request.GET:
-                self.insert_in_session(request.GET.getlist('checks'))
-            print(self.request.session['checks']) # Aqui deve ser processado o ADD_CART
-            self.request.session['checks'] = []
         self.request.session['lojaid'] = self.get_object().pk
         return super(ListProducts, self).get(request, *args, **kwargs)
 
@@ -69,6 +57,7 @@ class ProductView(LoginRequiredMixin, DetailView, LojaFocusMixin):
     pk_url_kwarg = 'pk'
 
     def get(self, request, *args, **kwargs):
+        self.request.session['produto'] = self.get_object().pk
         if 'checks' in self.request.session:
             self.request.session['checks'] = []
         return super(ProductView, self).get(request, *args, **kwargs)

@@ -75,46 +75,13 @@ def get_pedido(request, id_loja):
         return pedido
 
 
-def add_cart(request, id_loja):
-    checks = request.POST.getlist('checks')
-    if is_logged(request):
-        pedido = get_pedido(request, id_loja)
-        if check_same_store(id_loja, pedido) and ('produto' in request.POST):
-            produto = Produto.objects.get(id=request.POST['produto'])
-            obrigatorios = produto.grupo_set.filter(obrigatoriedade=True)
-            if check_required_selected(checks, obrigatorios) or obrigatorios.count() == 0:
-                obs = request.POST['observacoes']
-                cria_item_pedido(checks, pedido, produto, obs)
-            else:
-                messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
-                return redirect('/loja/' + str(pedido.estabelecimento.id))
-        else:
-            messages.error(request, u'Você deve comprar produtos no mesmo estabelecimento')
-            return redirect('/loja/' + str(pedido.estabelecimento.id))
-        pedido.save()
-        return redirect('/loja/' + str(pedido.estabelecimento.id))
-    pedido = get_pedido(request, id_loja)
-    if check_same_store(id_loja, pedido) and ('produto' in request.POST):
-        produto = Produto.objects.get(id=request.POST['produto'])
-        obrigatorios = produto.grupo_set.filter(obrigatoriedade=True)
-        if check_required_selected(checks, obrigatorios) or obrigatorios.count() == 0:
-            obs = request.POST['observacoes']
-            cria_item_pedido(checks, pedido, produto, obs)
-        else:
-            messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
-            return redirect('/loja/' + str(pedido.estabelecimento.id))
-    pedido.save()
-    messages.error(request, u'Para fazer um pedido você deve estar logado')
-    return redirect('/define/login/')
-
-
-def remove_cart(request, pk):
+def remove_cart_app(request, pk):
     pedido = Request.objects.get(id=request.session['pedido'])
     id_loja = pedido.estabelecimento.id
     del request.session['pedido']
     pedido.delete()
     messages.success(request, 'Pedido deletado com sucesso')
-    return redirect('/loja/' + str(id_loja))  # redirecionar para a loja
+    return redirect('/aplicativo/loja/' + str(id_loja))  # redirecionar para a loja
 
 
 def check_required_selected(checks, list):
@@ -142,14 +109,6 @@ class FinalizaRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
             messages.error(self.request, u'A Loja não está mais online para receber pedidos.')
             return redirect('/')
         return super(FinalizaRequest, self).get(request, *args, **kwargs)
-
-
-class CarrinhoReqView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
-    template_name = 'loja/carrinho.html'
-    login_url = '/define/login/'
-
-    def get(self, request, *args, **kwargs):
-        return super(CarrinhoReqView, self).get(request, *args, **kwargs)
 
 
 def submit_pedido(request):
@@ -256,3 +215,71 @@ class AcompanharRequest(LoginRequiredMixin, DetailView):
 class MeusRequests(LoginRequiredMixin, TemplateView, LojaFocusMixin):
     template_name = 'loja/meus_pedidos.html'
     login_url = '/define/login/'
+
+
+class CarrinhoAppView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 't_app/carrinho.html'
+    login_url = '/aplicativo/login/'
+
+    # def insert_in_session(self, array):
+    #     check_session = self.request.session['checks']
+    #     for e in array:
+    #         if e not in check_session:
+    #             check_session.append(e)
+    #     self.request.session['checks'] = check_session
+
+    def get(self, request, *args, **kwargs):
+        # if 'checks' in self.request.session:
+        #     if 'checks' in request.GET:
+        #         self.insert_in_session(request.GET.getlist('checks'))
+        #     print(self.request.session['checks']) # Aqui deve ser processado o ADD_CART
+        #     self.request.session['checks'] = []
+        return super(CarrinhoAppView, self).get(request, *args, **kwargs)
+
+
+def insert_in_session(request, array):
+    check_session = request.session['checks']
+    for e in array:
+        if e not in check_session:
+            check_session.append(e)
+    request.session['checks'] = check_session
+
+
+def add_cart_app(request, id_loja):
+    if 'checks' in request.session:
+        if 'checks' in request.GET:
+            insert_in_session(request, request.GET.getlist('checks'))
+        print(request.session['checks'])  # Aqui deve ser processado o ADD_CART
+    checks = request.session['checks']
+    if is_logged(request):
+        pedido = get_pedido(request, id_loja)
+        if check_same_store(id_loja, pedido) and ('produto' in request.session):
+            produto = Produto.objects.get(id=request.session['produto'])
+            obrigatorios = produto.grupo_set.filter(obrigatoriedade=True)
+            if check_required_selected(checks, obrigatorios) or obrigatorios.count() == 0:
+                # obs = request.POST['observacoes']
+                obs = ''
+                cria_item_pedido(checks, pedido, produto, obs)
+            else:
+                # deletar pedido caso exista na session
+                messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
+                return redirect('/aplicativo/loja/' + str(pedido.estabelecimento.id))
+        else:
+            messages.error(request, u'Você deve comprar produtos no mesmo estabelecimento')
+            return redirect('/aplicativo/loja/' + str(pedido.estabelecimento.id))
+        request.session['checks'] = []
+        pedido.save()
+        return redirect('/aplicativo/cart/')  # redirect to cart
+    pedido = get_pedido(request, id_loja)
+    if check_same_store(id_loja, pedido) and ('produto' in request.POST):
+        produto = Produto.objects.get(id=request.POST['produto'])
+        obrigatorios = produto.grupo_set.filter(obrigatoriedade=True)
+        if check_required_selected(checks, obrigatorios) or obrigatorios.count() == 0:
+            obs = request.POST['observacoes']
+            cria_item_pedido(checks, pedido, produto, obs)
+        else:
+            messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
+            return redirect('/aplicativo/loja/' + str(pedido.estabelecimento.id))
+    pedido.save()
+    messages.error(request, u'Para fazer um pedido você deve estar logado')
+    return redirect('/aplicativo/login/')
