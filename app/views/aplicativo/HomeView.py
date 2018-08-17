@@ -40,13 +40,13 @@ class ListProducts(LoginRequiredMixin, DetailView, LojaFocusMixin):
 
 
 # Paginar os grupos de um determinado produto (OK), e a medida que o usuario seleciona um item, o
-# sistema guarda o item(s) escolhidos daquele grupo (OK) e ao fim da paginacao, mostrar botao adicionar ao carrinho.
+# sistema guarda o item(s) escolhidos daquele grupo (OK) e ao fim da paginacao, mostrar botao adicionar ao carrinho. (OK)
 # Caso não haja grupos nem opcionais, mostrar direto o botao, e ir para o carrinho ao final.
 
 # page_number, paginator.num_pages, page, page_range
 
-# No Carrinho, implementar 2 botoes, finalizar pedido e continuar comprando. Para continuar comprando, voltar para a
-# loja, e em finaizar pedido, navegar para tela de cadastro ou selecao de enderecos -> forma de pagamento -> acompanhar.
+# No Carrinho, implementar 2 botoes,(OK) finalizar pedido e continuar comprando.(OK) Para continuar comprando, voltar para a
+# loja,(OK) e em finaizar pedido, navegar para tela de cadastro ou selecao de enderecos -> forma de pagamento -> acompanhar.
 
 # Class para ver os opcionais do grupo do produto selecionado
 
