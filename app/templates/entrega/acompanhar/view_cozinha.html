@@ -41,11 +41,8 @@
 
                                 <div class="box-body">
                                     <div class="row">
-                                        <div class="col-xs-9">
-                                        {{ entrega.pedido.request.id }}
-                                        </div>
                                         <div class="col-xs-3">
-                                            <a href="{% url 'print_pedido' entrega.pedido.id %}" target="_blank"
+                                            <a href="{% url 'print_ponto' entrega.id %}" target="_blank"
                                                class="btn btn-warning pull-right">
                                                 IMPRIMIR
                                             </a>
