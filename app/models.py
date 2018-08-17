@@ -550,7 +550,7 @@ class Request(TimeStamped):
     forma_pagamento = models.ForeignKey(FormaPagamento, blank=True, null=True, on_delete=models.CASCADE)
     forma_entrega = models.ForeignKey(FormaEntrega, blank=True, null=True, on_delete=models.CASCADE)
     endereco_entrega = models.ForeignKey(Endereco, blank=True, null=True)
-    pedido = models.ForeignKey(Pedido, blank=True, null=True)
+    pedido = models.ForeignKey(Pedido, blank=True, null=True, related_name='pedido')
 
     def __unicode__(self):
         return u'%s - %s - %s - %s' % (self.id, self.cliente, self.estabelecimento, self.valor_total)
