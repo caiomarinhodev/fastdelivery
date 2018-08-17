@@ -46,7 +46,7 @@ from app.views.painel.chamado.ChamadoView import ChamadoDeleteView
 from app.views.painel.chamado.ChamadoView import ChamadoListView
 from app.views.painel.chamado.ChamadoView import ChamadoUpdateView
 from app.views.painel.classificacao.ClassificacaoView import ClassificacaoListView
-from app.views.painel.dashboard.DashboardView import DashboardPedidosListView
+from app.views.painel.dashboard.DashboardView import DashboardPedidosListView, PrintView, PrintPontoView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaCreateView, FormaEntregaDeleteView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaListView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaUpdateView
@@ -177,9 +177,6 @@ urlpatterns = [
 
     url(r'finalizar-pedido/(?P<pk_pedido>[0-9]+)/$', finalizar_pedido, name="finalizar_pedido"),
 
-
-
-
     url(r'send-location/(-?\d+\.\d+)/(-?\d+\.\d+)/$', send_position_motorista, name="send_position_motorista"),
 
     url(r'get-location/(?P<pk_user>[0-9]+)/$', get_position_motorista, name=" get_position_motorista"),
@@ -224,6 +221,8 @@ urlpatterns = [
     url(r'^loja/login/$', LojaLoginView.as_view(), name='loja_login'),
     url(r'^logout/$', LojaLogoutView.as_view(), name='auth_logout'),
     url(r'^dashboard/$', DashboardPedidosListView.as_view(), name='dashboard'),
+    url(r'^printpedido/(?P<pk>[0-9]+)/$', PrintView.as_view(), name='print_pedido'),
+    url(r'^printponto/(?P<pk>[0-9]+)/$', PrintPontoView.as_view(), name='print_ponto'),
 
     url(r'^categoria/add/$', CategoriaCreateView.as_view(), name='add_categoria'),
     url(r'^categoria/edit/(?P<pk>[0-9]+)/$', CategoriaUpdateView.as_view(), name='edit_categoria'),
