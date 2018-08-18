@@ -30,8 +30,15 @@
                                     </div>
                                 </div>
                                 <div class="ci-price">
-                                    <a href="{% url 'delete_request' pedido_obj.pk %}"><i
-                                            class="fa fa-close"></i></a>
+                                    <div class="qty-total-price">
+                                        <div class="qty-prc">
+                                            <div class="quantity">
+                                                <a href="{% url 'remove_item_app' itempedido.pk %}"><i
+                                                        class="material-icons"></i>X</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {#                                <div class="qty-total-price">#}
                                     {#                                    <div class="qty-prc">#}
                                     {#                                        <div class="quantity">#}
@@ -78,7 +85,7 @@
                             {#                                <div class="cp-right">$ 21.00</div>#}
                             {#                            </div>#}
                         </div>
-                        <a href="#" class="btn button button-add-cart checkout-button">Finalizar
+                        <a href="{% url 'finaliza_app' %}" class="btn button button-add-cart checkout-button">Finalizar
                             <i class="fas fa-arrow-circle-right"></i>
                         </a>
 
@@ -88,7 +95,7 @@
                             <i class="fas fa-arrow-circle-left"></i> Voltar
                         </a>
                     {% else %}
-                        <a href="{% url 'home_app'  %}"
+                        <a href="{% url 'home_app' %}"
                            class="btn button button-add-cart checkout-button"
                            style="background-color:gainsboro; color:black;">
                             <i class="fas fa-arrow-circle-left"></i> Voltar

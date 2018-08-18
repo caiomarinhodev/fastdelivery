@@ -75,13 +75,26 @@ def get_pedido(request, id_loja):
         return pedido
 
 
-def remove_cart_app(request, pk):
-    pedido = Request.objects.get(id=request.session['pedido'])
-    id_loja = pedido.estabelecimento.id
-    del request.session['pedido']
-    pedido.delete()
-    messages.success(request, 'Pedido deletado com sucesso')
-    return redirect('/aplicativo/loja/' + str(id_loja))  # redirecionar para a loja
+def remove_item_app(request, pk):
+    item = ItemPedido.objects.get(id=pk)
+    pedido = item.pedido
+    if len(item.pedido.itempedido_set.all())>1:
+        item.delete()
+        pedido.save()
+    else:
+        item.delete()
+        pedido.delete()
+    messages.success(request, 'Item deletado com sucesso')
+    return redirect('/aplicativo/cart/')  # redirecionar para a carrinho
+
+
+# def remove_cart_app(request, pk):
+#     pedido = Request.objects.get(id=request.session['pedido'])
+#     id_loja = pedido.estabelecimento.id
+#     del request.session['pedido']
+#     pedido.delete()
+#     messages.success(request, 'Pedido deletado com sucesso')
+#     return redirect('/aplicativo/loja/' + str(id_loja))  # redirecionar para a loja
 
 
 def check_required_selected(checks, list):
@@ -100,15 +113,15 @@ def check_loja_is_online(request):
     return loja.is_online
 
 
-class FinalizaRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
-    template_name = 'loja/finaliza_pedido.html'
+class FinalizaAppRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 't_app/checkout.html'
     login_url = '/define/login/'
 
     def get(self, request, *args, **kwargs):
         if not check_loja_is_online(self.request):
             messages.error(self.request, u'A Loja não está mais online para receber pedidos.')
             return redirect('/')
-        return super(FinalizaRequest, self).get(request, *args, **kwargs)
+        return super(FinalizaAppRequest, self).get(request, *args, **kwargs)
 
 
 def submit_pedido(request):
@@ -221,19 +234,7 @@ class CarrinhoAppView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
     template_name = 't_app/carrinho.html'
     login_url = '/aplicativo/login/'
 
-    # def insert_in_session(self, array):
-    #     check_session = self.request.session['checks']
-    #     for e in array:
-    #         if e not in check_session:
-    #             check_session.append(e)
-    #     self.request.session['checks'] = check_session
-
     def get(self, request, *args, **kwargs):
-        # if 'checks' in self.request.session:
-        #     if 'checks' in request.GET:
-        #         self.insert_in_session(request.GET.getlist('checks'))
-        #     print(self.request.session['checks']) # Aqui deve ser processado o ADD_CART
-        #     self.request.session['checks'] = []
         return super(CarrinhoAppView, self).get(request, *args, **kwargs)
 
 
@@ -250,7 +251,10 @@ def add_cart_app(request, id_loja):
         if 'checks' in request.GET:
             insert_in_session(request, request.GET.getlist('checks'))
         print(request.session['checks'])  # Aqui deve ser processado o ADD_CART
-    checks = request.session['checks']
+    if 'checks' in request.session:
+        checks = request.session['checks']
+    else:
+        checks = []
     if is_logged(request):
         pedido = get_pedido(request, id_loja)
         if check_same_store(id_loja, pedido) and ('produto' in request.session):

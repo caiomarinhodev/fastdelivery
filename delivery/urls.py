@@ -29,7 +29,7 @@ from app.views.PedidoView import PedidosMotoristaListView, \
     PedidoDetailView, avaliar_motorista, get_pedidos, buscar_cliente, PedidosMotoristaPremiumListView, CozinhaListView, \
     set_to_prepared_pedido, liberar_corrida_cozinha, select_motoboy_fixo_cozinha, select_motoboy_fixo_painel
 from app.views.RelatorioView import RelatorioTemplateView, DashboardReportViewUser, TimelineView, PromocaoListView
-from app.views.aplicativo.CarrinhoView import CarrinhoAppView, add_cart_app
+from app.views.aplicativo.CarrinhoView import CarrinhoAppView, add_cart_app, FinalizaAppRequest, remove_item_app
 from app.views.aplicativo.HomeView import ListLojas, ListProducts, ProductView, ChooseGroupListView
 from app.views.aplicativo.LoginView import LoginClienteView, LogoutClienteView, RegistroClienteView
 from app.views.loja.AvaliacaoView import AvaliacaoView, add_avaliacao
@@ -332,7 +332,9 @@ urlpatterns = [
     url(r'^aplicativo/produto/(?P<pk>[0-9]+)/$', ProductView.as_view(), name='view_product_app'),
     url(r'^aplicativo/produto/(?P<pk>[0-9]+)/grupos/$', ChooseGroupListView.as_view(), name='choose_grupos_app'),
     url(r'^aplicativo/cart/$', CarrinhoAppView.as_view(), name='cart_app'),
-    url(r'^aplicativo/addcart/(?P<id_loja>[0-9]+)/$', add_cart_app, name='add_cart_app')
+    url(r'^aplicativo/addcart/(?P<id_loja>[0-9]+)/$', add_cart_app, name='add_cart_app'),
+    url(r'^aplicativo/finaliza/$', FinalizaAppRequest.as_view(), name='finaliza_app'),
+    url(r'^aplicativo/removeitem/(?P<pk>[0-9]+)/$', remove_item_app, name='remove_item_app'),
 ]
 
 urlpatterns += router.urls
