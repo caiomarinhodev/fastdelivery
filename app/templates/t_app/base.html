@@ -69,6 +69,14 @@
 <!-- Custom script -->
 <script src="{% static 'gromart/js/custom.js' %}"></script>
 <script src="{% static 'js/sweetalert.min.js' %}"></script>
+<script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems, options);
+    });
+</script>
 
 
 {% if messages %}

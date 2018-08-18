@@ -3,202 +3,234 @@
 {% load staticfiles %}
 
 {% block content %}
+    <script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
     <div class="cart-page">
         <div class="container">
             <div class="row">
-                <div class="col s12">
-                    <div class="section-title">Checkout</div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12">
-                    <div class="checkout-payable">
-                        <div class="cart-cp cart-total">
-                            <div class="cp-left">Total</div>
-                            <div class="cp-right">$ 29.00</div>
-                        </div>
-                        <div class="cart-cp cart-discount">
-                            <div class="cp-left">Discount</div>
-                            <div class="cp-right">- $ 10.00</div>
-                        </div>
-                        <div class="cart-cp cart-delivery">
-                            <div class="cp-left">Delivery</div>
-                            <div class="cp-right">$ 2.00</div>
-                        </div>
-                        <div class="cart-cp cart-total-payable">
-                            <div class="cp-left">Total payable</div>
-                            <div class="cp-right">$ 21.00</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <form class="col s12">
-                    <div class="payment-method-wrap ck-box">
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <div class="payment-method-text">
-                                    <i class="far fa-credit-card"></i> Payment method
+                <div class="col s12 m12 l12">
+                    <div class="row">
+                        <div class="payment-method-wrap ck-box">
+                            <div class="row">
+                                <div class="input-field col s12 m12 l12 ">
+                                    <div class="payment-method-text">
+                                        <i class="far fa-credit-card"></i> Forma de Entrega
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div style="margin: 0px 0px 10px">Choose your payment method :</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12 l12 ">
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="test1"/>
-                                    <label for="test1">Credit Card</label>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12 l12 ">
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="test2"/>
-                                    <label for="test2">Paypal</label>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12 l12 ">
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="test3"/>
-                                    <label for="test3">Direct Bank Transfer</label>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12 m12 l12 ">
-                                <p>
-                                    <input class="with-gap" name="group1" type="radio" id="test4"/>
-                                    <label for="test4">Check Payment</label>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="billing-detail-wrap ck-box">
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <div class="payment-method-text">
-                                    <i class="far fa-id-card"></i> Billing Detail
+
+                            {% for endereco in user.cliente.endereco_set.all %}
+                                <div class="row">
+                                    <div class="col s12 m12 l12 ">
+                                        <p>
+                                            <input id="id{{ endereco.id }}" type="radio"
+                                                   class="with-gap"
+                                                   name="endereco"
+                                                   value="{{ endereco.id }}"
+                                                    {% if endereco.bairro|is_entrega_gratis:pedido_obj.estabelecimento %}
+                                                   data-valor="0.00"
+                                                    {% else %}
+                                                        {% if user|is_madrugada %}
+                                                   data-valor="{{ endereco.bairro.valor_madrugada|floatformat:2 }}"
+                                                        {% else %}
+                                                   data-valor="{{ endereco.bairro.valor|floatformat:2 }}"
+                                                        {% endif %}
+                                                    {% endif %}
+                                            />
+                                            <label for="id{{ endereco.id }}">
+                                                Entrega (R$ {% if user|is_madrugada %}
+                                                {{ endereco.bairro.valor_madrugada|floatformat:2 }})
+                                                {% else %}{{ endereco.bairro.valor|floatformat:2 }}){% endif %}
+
+                                                {{ endereco.endereco_completo }}
+                                            </label>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col s12 m12 l12 ">
+                                    <p>
+                                        <input type="checkbox"
+                                               id="nno"
+                                               name="novo"
+                                               value="{{ endereco.id }}"/>
+                                        <label for="nno">
+                                            Cadastrar um novo endereço
+                                        </label>
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div style="margin: 0px 0px 10px">Fill in the form your billing detail :</div>
+                            <div class="row" style="display: none;" id="novo-div">
+                                <div class="col s12 m12">
+                                    <div class="col s12">
+                                        <div class="form-group">
+                                            <label for="rua">Endereço:</label>
+                                            <input class="validate" name="rua" id="rua"/>
+                                        </div>
+                                    </div>
+                                    <div class="col s12">
+                                        <div class="form-group">
+                                            <label for="id_numero">Número:</label>
+                                            <input class="validate numero" id="id_numero" maxlength="6"
+                                                   name="numero" type="text">
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            <select id="id_bairro" name="bairro">
+                                                <option value="" disabled selected>Escolha um bairro</option>
+                                                {% for bairro in bairros %}
+                                                    <option value="{{ bairro.id }}"
+                                                            {% if bairro|is_entrega_gratis:pedido_obj.estabelecimento %}
+                                                            data-valor="0.00"
+                                                            {% else %}
+                                                                {% if user|is_madrugada %}
+                                                            data-valor="{{ bairro.valor_madrugada|floatformat:2 }}"
+                                                                {% else %}
+                                                            data-valor="{{ bairro.valor|floatformat:2 }}"
+                                                                {% endif %}
+                                                            {% endif %}
+                                                    >
+                                                        {{ bairro.nome }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                            <label>Bairro:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col s12">
+                                        <div class="form-group">
+                                            <label for="complemento">Complemento:</label>
+                                            <input class="validate" id="complemento" maxlength="300"
+                                                   name="complemento" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="billing-firstname" type="text" class="validate">
-                                <label for="billing-firstname">First Name</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="billing-lastname" type="text" class="validate">
-                                <label for="billing-lastname">Last Name</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="billing-email" type="email" class="validate">
-                                <label for="billing-email">Email</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="billing-phone" type="tel" class="validate">
-                                <label for="billing-phone">Phone</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <textarea id="billing-address" class="materialize-textarea"></textarea>
-                                <label for="billing-address">Address</label>
-                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('[name=novo]').change(function () {
+                                        if ($(this).is(':checked')) {
+                                            $('[name=endereco]').prop('checked', false);
+                                            $('#novo-div').show();
+
+                                            $('#valor_entrega').text('');
+                                            $('#total').text('');
+                                        } else {
+                                            $('#novo-div').hide();
+                                        }
+                                    });
+                                })
+                            </script>
                         </div>
                     </div>
-                    <br>
-                    <br>
-                    <div class="shipping-info-wrap ck-box">
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <div class="payment-method-text">
-                                    <i class="fab fa-wpforms"></i> Shipping Information
+                    <div class="row">
+                        <div class="billing-detail-wrap ck-box">
+                            <div class="row">
+                                <div class="input-field col s12 m12 l12 ">
+                                    <div class="payment-method-text">
+                                        <i class="far fa-id-card"></i> Forma de Pagamento
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col s12">
-                                <div style="margin: 0px 0px 10px">New shipping address :</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="firstname" type="text" class="validate">
-                                <label for="firstname">First Name</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="info-lastname" type="text" class="validate">
-                                <label for="info-lastname">Last Name</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="phone" type="tel" class="validate">
-                                <label for="phone">Phone</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <input id="state" type="text" class="validate">
-                                <label for="state">State/Country</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s6 m12 l6 ">
-                                <input id="town" type="text" class="validate">
-                                <label for="town">Town/City</label>
-                            </div>
-                            <div class="input-field col s6 m12 l6 ">
-                                <input id="zip" type="text" class="validate">
-                                <label for="zip">Portalcode/ZIP</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12 m12 l12 ">
-                                <textarea id="address" class="materialize-textarea"></textarea>
-                                <label for="address">Address</label>
+                            {% for pgto in pedido_obj.estabelecimento.formapagamento_set.all %}
+                                {% if pgto.forma == 'DINHEIRO' %}
+                                    <div class="row">
+                                        <div class="col s12 m12 l12 ">
+                                            <p>
+                                                <input id="id{{ pgto.id }}" type="radio"
+                                                       name="pgto"
+                                                       value="{{ pgto.id }}"/>
+
+                                                <label for="id{{ pgto.id }}">
+                                                    {{ pgto.forma }} {% if pgto.cartao %}
+                                                    {{ pgto.cartao }}  {% endif %}
+                                                </label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col s12 m12 l12 ">
+                                            <p>
+                                                <input id="id{{ pgto.id }}"
+                                                       type="radio"
+                                                       name="pgto"
+                                                       value="{{ pgto.id }}"/>
+                                                <label for="id{{ pgto.id }}"> {{ pgto.forma }} {% if pgto.cartao %}
+                                                    {{ pgto.cartao }}  {% endif %}</label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <p> Precisa de troco? Para quanto? (ou use seu Cupom) <input
+                                            class="form-control"
+                                            name="troco"
+                                            id="troco"
+                                            placeholder="#Insira aqui também seu Cupom"/>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col s12">
-                            <br>
-                            <p>
-                                <input type="checkbox" class="filled-in" id="filled-in-box" checked="checked"/>
-                                <label class="label-checkbox" for="filled-in-box"> I agree that i have read and accepted
-                                    the <a href="#">terms & conditions</a></label>
-                            </p>
+                            <div class="checkout-payable">
+                                <div class="cart-cp cart-total">
+                                    <div class="cp-left">Sub Total</div>
+                                    <div class="cp-right">
+                                        {% if pedido_obj %}
+                                            R$ {{ pedido_obj.subtotal|floatformat:2 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="cart-cp cart-delivery">
+                                    <div class="cp-left">Valor da Entrega</div>
+                                    <div class="cp-right" id="valor_entrega">
+                                        {% if pedido_obj %}
+                                            R$ {{ pedido_obj.endereco_entrega.valor_entrega|floatformat:2 }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="cart-cp cart-total-payable">
+                                    <div class="cp-left total">Total</div>
+                                    {% if pedido_obj %}
+                                        <div class="cp-right" id="total"></div>
+                                    {% endif %}
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('[name=endereco]').change(function () {
+                                                if ($(this).is(':checked')) {
+                                                    var valor_endereco = parseFloat($(this).data('valor'));
+                                                    var valor_subtotal = parseFloat('{{ pedido_obj.subtotal }}');
+                                                    $('#valor_entrega').text(valor_endereco.toFixed(2));
+                                                    $('#total').text(parseFloat(valor_endereco + valor_subtotal).toFixed(2));
+                                                }
+                                            });
+
+                                            $('[name=bairro]').change(function () {
+                                                var valor_endereco = parseFloat($('[name=bairro] option:selected').data('valor'));
+                                                var valor_subtotal = parseFloat('{{ pedido_obj.subtotal }}');
+                                                $('#valor_entrega').text(valor_endereco.toFixed(2));
+                                                $('#total').text(parseFloat(valor_endereco + valor_subtotal).toFixed(2));
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12 m12 l12 center">
-                            <button class="btn theme-btn-rounded ">Submit</button>
+                            <button class="btn theme-btn-rounded ">Pedir Agora</button>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

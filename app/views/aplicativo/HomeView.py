@@ -34,31 +34,19 @@ class ListProducts(LoginRequiredMixin, DetailView, LojaFocusMixin):
     model = Estabelecimento
     pk_url_kwarg = 'pk'
 
-    def insert_in_session(self, array):
-        check_session = self.request.session['checks']
-        for e in array:
-            if e not in check_session:
-                check_session.append(e)
-        self.request.session['checks'] = check_session
-
     def get(self, request, *args, **kwargs):
-        if 'checks' in self.request.session:
-            if 'checks' in request.GET:
-                self.insert_in_session(request.GET.getlist('checks'))
-            print(self.request.session['checks']) # Aqui deve ser processado o ADD_CART
-            self.request.session['checks'] = []
         self.request.session['lojaid'] = self.get_object().pk
         return super(ListProducts, self).get(request, *args, **kwargs)
 
 
 # Paginar os grupos de um determinado produto (OK), e a medida que o usuario seleciona um item, o
-# sistema guarda o item(s) escolhidos daquele grupo (OK) e ao fim da paginacao, mostrar botao adicionar ao carrinho.
+# sistema guarda o item(s) escolhidos daquele grupo (OK) e ao fim da paginacao, mostrar botao adicionar ao carrinho. (OK)
 # Caso não haja grupos nem opcionais, mostrar direto o botao, e ir para o carrinho ao final.
 
 # page_number, paginator.num_pages, page, page_range
 
-# No Carrinho, implementar 2 botoes, finalizar pedido e continuar comprando. Para continuar comprando, voltar para a
-# loja, e em finaizar pedido, navegar para tela de cadastro ou selecao de enderecos -> forma de pagamento -> acompanhar.
+# No Carrinho, implementar 2 botoes,(OK) finalizar pedido e continuar comprando.(OK) Para continuar comprando, voltar para a
+# loja,(OK) e em finaizar pedido, navegar para tela de cadastro ou selecao de enderecos -> forma de pagamento -> acompanhar.
 
 # Class para ver os opcionais do grupo do produto selecionado
 
@@ -69,6 +57,7 @@ class ProductView(LoginRequiredMixin, DetailView, LojaFocusMixin):
     pk_url_kwarg = 'pk'
 
     def get(self, request, *args, **kwargs):
+        self.request.session['produto'] = self.get_object().pk
         if 'checks' in self.request.session:
             self.request.session['checks'] = []
         return super(ProductView, self).get(request, *args, **kwargs)
