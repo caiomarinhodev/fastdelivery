@@ -15,6 +15,7 @@
     <link rel="stylesheet"
           href="{% static 'gromart/node_modules/font-awesome/web-fonts-with-css/css/fontawesome-all.css' %}">
     <link rel="stylesheet" href="{% static 'gromart/css/materialize.min.css' %}">
+    <link rel="stylesheet" href="https://materializecss.com/css/ghpages-materialize.css">
     <link rel="stylesheet" href="{% static 'gromart/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'gromart/css/style.css' %}">
     <!-- materialize icon -->
@@ -70,14 +71,11 @@
 <script src="{% static 'gromart/js/custom.js' %}"></script>
 <script src="{% static 'js/sweetalert.min.js' %}"></script>
 <script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems, options);
-    });
-</script>
-
+{#<script>#}
+{#    $(document).ready(function(){#}
+{#       $('select').form#}
+{#    });#}
+{#</script>#}
 
 {% if messages %}
     {% for message in messages %}
