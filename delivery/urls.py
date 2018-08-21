@@ -29,7 +29,8 @@ from app.views.PedidoView import PedidosMotoristaListView, \
     PedidoDetailView, avaliar_motorista, get_pedidos, buscar_cliente, PedidosMotoristaPremiumListView, CozinhaListView, \
     set_to_prepared_pedido, liberar_corrida_cozinha, select_motoboy_fixo_cozinha, select_motoboy_fixo_painel
 from app.views.RelatorioView import RelatorioTemplateView, DashboardReportViewUser, TimelineView, PromocaoListView
-from app.views.aplicativo.CarrinhoView import CarrinhoAppView, add_cart_app, FinalizaAppRequest, remove_item_app
+from app.views.aplicativo.CarrinhoView import CarrinhoAppView, add_cart_app, FinalizaAppRequest, remove_item_app, \
+    AcompanharRequestApp, submit_pedido_app, MeusRequestsApp
 from app.views.aplicativo.HomeView import ListLojas, ListProducts, ProductView, ChooseGroupListView
 from app.views.aplicativo.LoginView import LoginClienteView, LogoutClienteView, RegistroClienteView
 from app.views.loja.AvaliacaoView import AvaliacaoView, add_avaliacao
@@ -335,6 +336,9 @@ urlpatterns = [
     url(r'^aplicativo/addcart/(?P<id_loja>[0-9]+)/$', add_cart_app, name='add_cart_app'),
     url(r'^aplicativo/finaliza/$', FinalizaAppRequest.as_view(), name='finaliza_app'),
     url(r'^aplicativo/removeitem/(?P<pk>[0-9]+)/$', remove_item_app, name='remove_item_app'),
+    url(r'^aplicativo/acompanhar-nota/(?P<pk>[0-9]+)/$', AcompanharRequestApp.as_view(), name='acompanhar_pedido_app'),
+    url(r'^aplicativo/submit/$', submit_pedido_app, name='submit_pedido_app'),
+    url(r'^aplicativo/meuspedidos/$', MeusRequestsApp.as_view(), name='meus_pedidos_app'),
 ]
 
 urlpatterns += router.urls

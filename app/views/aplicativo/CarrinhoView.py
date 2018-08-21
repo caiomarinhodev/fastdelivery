@@ -109,22 +109,25 @@ def check_required_selected(checks, list):
 
 
 def check_loja_is_online(request):
-    loja = Request.objects.get(id=request.session['pedido']).estabelecimento
-    return loja.is_online
+    if 'pedido' in request.session:
+        loja = Request.objects.get(id=request.session['pedido']).estabelecimento
+        return loja.is_online
+    else:
+        return False
 
 
 class FinalizaAppRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
     template_name = 't_app/checkout.html'
-    login_url = '/define/login/'
+    login_url = '/aplicativo/login/'
 
     def get(self, request, *args, **kwargs):
         if not check_loja_is_online(self.request):
             messages.error(self.request, u'A Loja não está mais online para receber pedidos.')
-            return redirect('/')
+            return redirect('/aplicativo/loja')
         return super(FinalizaAppRequest, self).get(request, *args, **kwargs)
 
 
-def submit_pedido(request):
+def submit_pedido_app(request):
     data = request.POST
     endereco = None
     try:
@@ -133,7 +136,7 @@ def submit_pedido(request):
         pedido.cliente = cliente
     except (Exception,):
         messages.error(request, 'Faça Login para finalizar o pedido')
-        return redirect('/define/login/')
+        return redirect('/aplicativo/login/')
     try:
         if 'endereco' in data:
             if data['endereco'] != '':
@@ -148,26 +151,26 @@ def submit_pedido(request):
                     endereco.save()
                 else:
                     messages.error(request, u'Nao conseguimos cadastrar seu endereco')
-                    return redirect('/finaliza-pedido/')
+                    return redirect('/aplicativo/finaliza/')
             else:
                 messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
-                return redirect('/finaliza-pedido/')
+                return redirect('/aplicativo/finaliza/')
     except (Exception,):
         messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
-        return redirect('/finaliza-pedido/')
+        return redirect('/aplicativo/finaliza/')
     try:
         if 'pgto' in data:
             if data['pgto'] != u'':
                 forma_pagamento = FormaPagamento.objects.get(id=data['pgto'])
             else:
                 messages.error(request, u'Insira uma forma de pagamento')
-                return redirect('/finaliza-pedido/')
+                return redirect('/aplicativo/finaliza/')
         else:
             messages.error(request, u'Insira uma forma de pagamento')
-            return redirect('/finaliza-pedido/')
+            return redirect('/aplicativo/finaliza/')
     except (Exception,):
         messages.error(request, u'Insira uma forma de pagamento')
-        return redirect('/finaliza-pedido/')
+        return redirect('/aplicativo/finaliza/')
     try:
         pedido.troco = data['troco']
     except (Exception,):
@@ -178,7 +181,7 @@ def submit_pedido(request):
             pedido.endereco_entrega = endereco
         else:
             messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
-            return redirect('/finaliza-pedido/')
+            return redirect('/aplicativo/finaliza/')
         pedido.save()
         messages.success(request, 'Pedido Realizado com Sucesso')
         message = make_message(pedido)
@@ -186,8 +189,8 @@ def submit_pedido(request):
         n.save()
     except (Exception,):
         messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
-        return redirect('/finaliza-pedido/')
-    return redirect('/acompanhar-pedido/' + str(pedido.pk))
+        return redirect('/aplicativo/finaliza/')
+    return redirect('/aplicativo/acompanhar-nota/' + str(pedido.pk))
 
 
 def make_message(pedido):
@@ -213,21 +216,21 @@ def make_message(pedido):
         return message
 
 
-class AcompanharRequest(LoginRequiredMixin, DetailView):
-    template_name = 'loja/acompanha_pedido.html'
-    login_url = '/define/login/'
+class AcompanharRequestApp(LoginRequiredMixin, DetailView):
+    template_name = 't_app/acompanhar.html'
+    login_url = '/aplicativo/login/'
     model = Request
     context_object_name = 'pedido_obj'
 
     def get(self, request, *args, **kwargs):
         if 'pedido' in self.request.session:
             del self.request.session['pedido']
-        return super(AcompanharRequest, self).get(request, *args, **kwargs)
+        return super(AcompanharRequestApp, self).get(request, *args, **kwargs)
 
 
-class MeusRequests(LoginRequiredMixin, TemplateView, LojaFocusMixin):
-    template_name = 'loja/meus_pedidos.html'
-    login_url = '/define/login/'
+class MeusRequestsApp(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 't_app/meuspedidos.html'
+    login_url = '/aplicativo/login/'
 
 
 class CarrinhoAppView(LoginRequiredMixin, TemplateView, LojaFocusMixin):

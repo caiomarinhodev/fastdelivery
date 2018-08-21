@@ -26,6 +26,15 @@
                                 <div class="ci-name">
                                     <div class="cin-top">
                                         <div class="cin-title">{{ itempedido.produto.nome }}</div>
+                                        <div class="price">
+                                            (
+                                            {% for opc in itempedido.opcionalchoice_set.all %}
+                                                {{ opc.opcional.nome }},
+                                            {% empty %}
+                                                -
+                                            {% endfor %}
+                                            )
+                                        </div>
                                         <div class="cin-price">R$ {{ itempedido.valor_total|floatformat:2 }}</div>
                                     </div>
                                 </div>
