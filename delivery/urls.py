@@ -325,6 +325,7 @@ urlpatterns = [
 
     # --------------------------------------------------------------------------
 
+    url(r'^aplicativo/$', ListLojas.as_view(), name='home_app'),
     url(r'^aplicativo/loja/$', ListLojas.as_view(), name='home_app'),
     url(r'^aplicativo/login/$', LoginClienteView.as_view(), name='login_app'),
     url(r'^aplicativo/logout/$', LogoutClienteView.as_view(), name='logout_app'),
