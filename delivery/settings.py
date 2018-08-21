@@ -34,7 +34,7 @@ SECRET_KEY = '=6iehk1nzu)(iv%&lk%_qo+)$dd_eq-(3c8_@!)$7b7c0p^t3m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'localhost', 'localhost:4200']
 
 # Application definition
 
@@ -46,55 +46,65 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'rest_framework',
     # 'pwa',
 ]
 
-# PWA_APP_NAME = 'Focus Delivery'
-# PWA_APP_DESCRIPTION = u"A Focus Delivery é uma plataforma online que está revolucionando o mercado de entregas expressas no Brasil."
-# PWA_APP_THEME_COLOR = '#555556'
-# PWA_APP_ICONS = [
-#     {
-#         "src": '/static/images/icon-72x72.png',
-#         "sizes": "72x72",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-96x96.png",
-#         "sizes": "96x96",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-128x128.png",
-#         "sizes": "128x128",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-144x144.png",
-#         "sizes": "144x144",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-152x152.png",
-#         "sizes": "152x152",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-192x192.png",
-#         "sizes": "192x192",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-384x384.png",
-#         "sizes": "384x384",
-#         "type": "image/png"
-#     },
-#     {
-#         "src": "/static/images/icon-512x512.png",
-#         "sizes": "512x512",
-#         "type": "image/png"
-#     }
-# ]
+PWA_APP_NAME = 'Focus Delivery'
+PWA_APP_DESCRIPTION = u"A Focus Delivery é uma plataforma online que está revolucionando o mercado de entregas expressas no Brasil."
+PWA_APP_THEME_COLOR = '#555556'
+PWA_APP_ICONS = [
+    {
+        "src": '/static/images/icon-72x72.png',
+        "sizes": "72x72",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-96x96.png",
+        "sizes": "96x96",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-128x128.png",
+        "sizes": "128x128",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-144x144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-152x152.png",
+        "sizes": "152x152",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-384x384.png",
+        "sizes": "384x384",
+        "type": "image/png"
+    },
+    {
+        "src": "/static/images/icon-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }
+]
 # PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static', 'js', 'pwabuilder-sw.js')
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+
+    ]
+}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,6 +116,17 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 
 ROOT_URLCONF = 'delivery.urls'
 

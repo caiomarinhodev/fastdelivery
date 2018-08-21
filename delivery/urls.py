@@ -2,11 +2,16 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from rest_framework import routers
 
+from api import views as views_api
+from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedidoViewSet, \
+    OpcionalChoiceViewSet, EnderecoViewSet, RequestViewSet, ListMyRequests, ClienteViewSet, ListMyAddress
 from app.views.AcompanharView import AcompanharListView, AcompanharDetailView, LojasMotoristaListView
 from app.views.ChatView import ListChatView, get_chat, ChatPedidoView, submit_message, ChatMotoristaPedidoView
 from app.views.ClientesView import *
-from app.views.HomeView import DashboardDataView, set_feriado_admin, ListMotoristasView, DashboardListPedidosView
+from app.views.HomeView import DashboardDataView, set_feriado_admin, ListMotoristasView, DashboardListPedidosView, \
+    copy_catalogo, copy_group, delete_catalogo, delete_group
 from app.views.LocationView import get_position_motorista, send_position_motorista
 from app.views.LoginView import LoginView, LogoutView, RegisterView, AppView, EditarPerfilView, RegisterMotoristaView, \
     SetOnlineMotoboyView
@@ -22,12 +27,12 @@ from app.views.PedidoView import PedidosMotoristaListView, \
     RouteMotoristaDetailView, MapRouteMotoristaView, finalizar_entrega, finalizar_pedido, PedidoUpdateView, \
     cancel_pedido, \
     PedidoDetailView, avaliar_motorista, get_pedidos, buscar_cliente, PedidosMotoristaPremiumListView, CozinhaListView, \
-    set_to_prepared_pedido, liberar_corrida_cozinha
+    set_to_prepared_pedido, liberar_corrida_cozinha, select_motoboy_fixo_cozinha, select_motoboy_fixo_painel
 from app.views.RelatorioView import RelatorioTemplateView, DashboardReportViewUser, TimelineView, PromocaoListView
 from app.views.loja.AvaliacaoView import AvaliacaoView, add_avaliacao
 from app.views.loja.CarrinhoView import add_cart, FinalizaRequest, AcompanharRequest, submit_pedido, MeusRequests, \
-    remove_cart
-from app.views.loja.HomeView import HomeView, LojaProdutosListView, SetOnlineView, script, bootstrap
+    remove_cart, CarrinhoReqView
+from app.views.loja.HomeView import HomeView, LojaProdutosListView, SetOnlineView, script, bootstrap, SobreView
 from app.views.loja.LoginView import ClienteLoginView
 from app.views.loja.LoginView import EscolheLoginView, RegistroCliente
 from app.views.painel.bairro_gratis.BairroGratisView import BairroGratisCreateView, BairroGratisUpdateView, \
@@ -41,7 +46,7 @@ from app.views.painel.chamado.ChamadoView import ChamadoDeleteView
 from app.views.painel.chamado.ChamadoView import ChamadoListView
 from app.views.painel.chamado.ChamadoView import ChamadoUpdateView
 from app.views.painel.classificacao.ClassificacaoView import ClassificacaoListView
-from app.views.painel.dashboard.DashboardView import DashboardPedidosListView
+from app.views.painel.dashboard.DashboardView import DashboardPedidosListView, PrintView, PrintPontoView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaCreateView, FormaEntregaDeleteView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaListView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaUpdateView
@@ -86,6 +91,22 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet, base_name='users')
+router.register(r'districts', BairroViewSet, base_name='districts')
+router.register(r'configurations', ConfigurationViewSet, base_name='configurations')
+router.register(r'requests', RequestViewSet, base_name='requests')
+router.register(r'items', ItemPedidoViewSet, base_name='items')
+router.register(r'optionals', OpcionalChoiceViewSet, base_name='optionals')
+router.register(r'addresses', EnderecoViewSet, base_name='addresses')
+router.register(r'clients', ClienteViewSet, base_name='clients')
+
+url_api = [
+    url(r'^stores/$', views_api.EstabelecimentoList.as_view()),
+    url(r'my-requests/$', ListMyRequests.as_view()),
+    url(r'my-addresses/$', ListMyAddress.as_view()),
+]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -200,6 +221,8 @@ urlpatterns = [
     url(r'^loja/login/$', LojaLoginView.as_view(), name='loja_login'),
     url(r'^logout/$', LojaLogoutView.as_view(), name='auth_logout'),
     url(r'^dashboard/$', DashboardPedidosListView.as_view(), name='dashboard'),
+    url(r'^printpedido/(?P<pk>[0-9]+)/$', PrintView.as_view(), name='print_pedido'),
+    url(r'^printponto/(?P<pk>[0-9]+)/$', PrintPontoView.as_view(), name='print_ponto'),
 
     url(r'^categoria/add/$', CategoriaCreateView.as_view(), name='add_categoria'),
     url(r'^categoria/edit/(?P<pk>[0-9]+)/$', CategoriaUpdateView.as_view(), name='edit_categoria'),
@@ -256,6 +279,7 @@ urlpatterns = [
 
     url(r'^add-cart/(?P<id_loja>[0-9]+)/$', add_cart, name='add_cart'),
     url(r'finaliza-pedido/$', FinalizaRequest.as_view(), name='finaliza_pedido'),
+    url(r'carrinho/$', CarrinhoReqView.as_view(), name="meu-carrinho"),
     url(r'acompanhar-pedido/(?P<pk>[0-9]+)/$', AcompanharRequest.as_view(), name='acompanhar_pedido'),
     url(r'submit-pedido/$', submit_pedido, name='submit_pedido'),
     url(r'^notificacao/pedido/$', notificacao_pedido, name="notificacao_pedido"),
@@ -281,4 +305,21 @@ urlpatterns = [
     url(r'^chamado/delete/(?P<pk>[0-9]+)/$', ChamadoDeleteView.as_view(), name='delete_chamado'),
 
     url('', include('pwa.urls')),
+
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'^sobre/$', SobreView.as_view(), name='about'),
+
+    url(r'^ativar-motoboy/(?P<pk>[0-9]+)/$', select_motoboy_fixo_cozinha, name='ativar_motoboy'),
+
+    url(r'^ativar-motoboy-painel/(?P<pk>[0-9]+)/$', select_motoboy_fixo_painel, name='ativar_motoboy_painel'),
+
+    url(r'^copiar-catalogo/$', copy_catalogo, name='copiar_catalogo'),
+    url(r'^copiar-grupo/$', copy_group, name='copiar_grupo'),
+    url(r'^deletar-catalogo/$', delete_catalogo, name='deletar_catalogo'),
+    url(r'^deletar-grupo/$', delete_group, name='deletar_grupo'),
 ]
+
+urlpatterns += router.urls
+
+urlpatterns += url_api

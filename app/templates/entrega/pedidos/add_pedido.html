@@ -237,6 +237,10 @@
     <script src="{% static 'js/jquery.formset.js' %}"></script>
     <script>
         $('.add-row').addClass('btn btn-primary');
+        $('#body').addClass('sidebar-collapse');
+        $(document).ready(function () {
+            $('#body').addClass('sidebar-collapse');
+        });
     </script>
     {#    {% for i in "xxxxxxxxxxxxxxxxxxxx" %}#}
     {#        <script>#}
@@ -289,5 +293,7 @@
     {#    {% endfor %}#}
 
     {% include 'entrega/includes/script_message_notify.html' %}
+
+
 
 {% endblock %}

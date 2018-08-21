@@ -1,11 +1,9 @@
 {% load staticfiles %}
 {% load filters %}
-{#{% load pwa %}#}
 <!DOCTYPE html>
 <html lang="pt-br">
 {% block head %}
 
-{#    {% progressive_web_app_meta %}#}
     {% include 'loja/includes/head.html' %}
     <script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
     <link href="{% static 'css/sweetalert.min.css' %}" rel="stylesheet">
@@ -65,7 +63,7 @@
         {% if message.tags == 'error' %}
             <script>
                 $(document).ready(function () {
-                    swal("Erro", "{{ message|safe }}", "error")
+                    swal("Ops...", "{{ message|safe }}", "error")
                 });
             </script>
         {% else %}

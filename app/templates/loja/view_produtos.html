@@ -4,6 +4,7 @@
 
 {% block content %}
     <style>
+
         .bg-red {
             color: red;
         {#background-color: red;#}
@@ -13,6 +14,21 @@
             color: green;
         {#background-color: green;#}
         }
+
+        @media only screen and (min-width: 991px) {
+{#            .thumbnail {#}
+{#                height: 180px;#}
+{#                width: 180px;#}
+{#            }#}
+        }
+
+        @media (max-width: 990px) {
+            .thumbs {
+                height: 250px;
+            }
+        }
+
+
     </style>
     {#    {% include 'carrossel.html' %}#}
     <section class="bar background-white no-mb">
@@ -53,10 +69,16 @@
                                             </p>
                                             <p>
                                                 <a href="#" class="btn btn-xs btn-default">
-                                                    <span class="fa fa-star"></span> {{ loja|calcula_media_aval|floatformat:1 }}
+                                                    <span class="fa fa-star"></span>
+                                                    {{ loja|calcula_media_aval|floatformat:1 }}
                                                 </a>
                                             </p>
-                                            
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <div class="media-body text-center">
+                                            {{ loja.description|safe }}
                                         </div>
                                     </div>
                                 </div>
@@ -69,205 +91,282 @@
                     <div class="row">
                         <ul class="nav nav-pills nav-fill">
                             {% for categoria in loja.categoria_set.all %}
-                                <li><a href="#cat-{{ categoria.pk }}" data-toggle="tab"
-                                       aria-expanded="true">{{ categoria.nome }}</a></li>
+                                {% if categoria.disponibilidade %}
+                                    <li><a href="#cat-{{ categoria.pk }}" data-toggle="tab"
+                                           aria-expanded="true">{{ categoria.nome }}</a></li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                         <div id="myTabContent" class="tab-content">
                             {% for cat in loja.categoria_set.all %}
                                 {% if cat.produto_set.first %}
-                                    <div class="tab-pane" id="cat-{{ cat.pk }}">
-                                        <div class="row">
-                                            {% for produto in cat.produto_set.all %}
-                                                {% if produto.disponivel %}
-                                                    <form method="post"
-                                                          action="{% url 'add_cart' loja.id %}">{% csrf_token %}
-                                                        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
-                                                             style="margin-bottom: 50px;">
-                                                            <a href="#p{{ produto.pk }}" data-toggle="modal"
-                                                               data-target="#p{{ produto.pk }}">
-                                                                <div class="thumbnail"
-                                                                     style="height: 180px; width: 180px;">
-                                                                    <img title="{{ produto.nome }}"
-                                                                         alt="{{ produto.nome }}"
-                                                                         src="{{ produto.fotoproduto_set.first }}"
-                                                                         style="height: 170px; width: 170px;"
-                                                                    />
-                                                                    <div class="caption text-center">
-                                                                        <h4>{{ produto.nome }}</h4>
-                                                                        <p>R$ {{ produto.preco_base }}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </div>
-                                                        <div class="modal fade" id="p{{ produto.pk }}" tabindex="-1"
-                                                             role="dialog" aria-labelledby="exampleModalLabel"
-                                                             aria-hidden="true">
-                                                            <div class="modal-dialog" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header text-center">
-                                                                        <input name="produto" value="{{ produto.id }}"
-                                                                               class="hidden"/>
-                                                                        <h3 class="modal-title">{{ produto.nome }}
-                                                                            (R$ {{ produto.preco_base }})</h3>
-                                                                        <button type="button" class="close fechar"
-                                                                                data-dismiss="modal"
-                                                                                aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="row text-center">
-                                                                            <div class="col-xs-12">
-                                                                                <label><b>Descricao:</b></label>
-                                                                                <p class="text-center">{{ produto.descricao }}</p>
-                                                                            </div>
+                                    {% if cat.disponibilidade %}
+                                        <div class="tab-pane" id="cat-{{ cat.pk }}">
+                                            <div class="row">
+                                                {% for produto in cat.produto_set.all %}
+                                                    {% if produto.disponivel %}
+                                                        <form method="post"
+                                                              action="{% url 'add_cart' loja.id %}">{% csrf_token %}
+                                                            <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3"
+                                                                 style="margin-bottom: 50px;">
+                                                                <a
+                                                                        {% if user.cliente %}
+                                                                            href="#p{{ produto.pk }}"
+                                                                            data-toggle="modal"
+                                                                            data-target="#p{{ produto.pk }}"
+                                                                        {% else %}
+                                                                            href="#login_pop"
+                                                                            data-toggle="modal"
+                                                                            data-target="#login_pop"
+                                                                        {% endif %}
+
+                                                                >
+                                                                    <div class="thumbnail thumbs">
+                                                                        <img title="{{ produto.nome }}"
+                                                                             alt="{{ produto.nome }}"
+                                                                             src="{{ produto.fotoproduto_set.first }}"
+                                                                             style="height: 100px; width: 180px;"
+                                                                        />
+                                                                        <div class="caption text-center">
+                                                                            <h4>{{ produto.nome|truncatechars:"18" }}</h4>
+                                                                            <p>
+                                                                                R$ {{ produto.preco_base|floatformat:2 }}</p>
                                                                         </div>
-                                                                        <hr/>
-                                                                        {% for grupo in produto.grupo_set.all|order_by:'created_at' %}
-                                                                            {% if grupo.disponivel %}
-                                                                                <div class="row">
-                                                                                    <div class="col-xs-12">
-                                                                                        <label><b>{{ grupo.titulo }}
-                                                                                            {% if grupo.obrigatoriedade %}
-                                                                                                <b style="color: red;">*</b>
-                                                                                            {% endif %}
-                                                                                            :</b></label>
-
-                                                                                        {% if grupo.tipo == 'radio' %}
-                                                                                            {% for opcional in grupo.opcional_set.all|order_by:'created_at' %}
-                                                                                                {% if opcional.disponivel %}
-                                                                                                    <div class="checkbox">
-                                                                                                        <label>
-                                                                                                            <input type="checkbox"
-                                                                                                                   name="checks"
-                                                                                                                   data-limitador-{{ grupo.pk }}="{{ grupo.limitador }}"
-                                                                                                                   data-value="{{ opcional.valor }}"
-                                                                                                                   value="{{ opcional.id }}"
-                                                                                                                   onclick="return keepcoun{{ grupo.pk }}t();">
-                                                                                                            {{ opcional.nome }}
-                                                                                                            ({% if opcional.descricao %}{{ opcional.descricao }}{% endif %} +R$ {{ opcional.valor }})
-                                                                                                        </label>
-                                                                                                    </div>
-                                                                                                {% endif %}
-                                                                                            {% endfor %}
-                                                                                            <script type="text/javascript">
-                                                                                                function keepcoun{{ grupo.pk }}t() {
-                                                                                                    var inputTags_{{ grupo.pk }} = $('input[data-limitador-{{ grupo.pk }}={{ grupo.limitador }}]');
-                                                                                                    var total_{{ grupo.pk }} = 0;
-                                                                                                    for (var i = 0; i < inputTags_{{ grupo.pk }}.length; i++) {
-
-                                                                                                        if (inputTags_{{ grupo.pk }}[i].checked) {
-                                                                                                            total_{{ grupo.pk }} = total_{{ grupo.pk }} + 1;
-                                                                                                        }
-
-                                                                                                        if (total_{{ grupo.pk }} > parseInt({{ grupo.limitador }})) {
-                                                                                                            {% if grupo.limitador == '1' %}
-                                                                                                                swal('Escolha apenas {{ grupo.limitador }} item', '', 'warning');
-                                                                                                            {% else %}
-                                                                                                                swal('Escolha apenas {{ grupo.limitador }} opcionais', '', 'warning');
-                                                                                                            {% endif %}
-
-                                                                                                            inputTags_{{ grupo.pk }}[i].checked = false;
-                                                                                                            return false;
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            </script>
-                                                                                        {% else %}
-                                                                                            {% for opc in grupo.opcional_set.all|order_by:'created_at' %}
-                                                                                                {% if opc.disponivel %}
-                                                                                                    <div class="checkbox">
-                                                                                                        <label>
-                                                                                                            <input type="checkbox"
-                                                                                                                   name="checks"
-                                                                                                                   data-limitador-{{ grupo.pk }}="{{ grupo.limitador }}"
-                                                                                                                   data-value="{{ opc.valor }}"
-                                                                                                                   value="{{ opc.id }}"
-                                                                                                                   onclick="return keepcoun{{ grupo.pk }}t();">
-                                                                                                            {{ opc.nome }}
-                                                                                                            ({% if opcional.descricao %}{{ opcional.descricao }}{% endif %} +R$ {{ opc.valor }})
-                                                                                                        </label>
-                                                                                                    </div>
-                                                                                                {% endif %}
-                                                                                            {% endfor %}
-                                                                                            <script type="text/javascript">
-                                                                                                function keepcoun{{ grupo.pk }}t() {
-                                                                                                    var inputTags_{{ grupo.pk }} = $('input[data-limitador-{{ grupo.pk }}={{ grupo.limitador }}]');
-                                                                                                    var total_{{ grupo.pk }} = 0;
-                                                                                                    for (var i = 0; i < inputTags_{{ grupo.pk }}.length; i++) {
-
-                                                                                                        if (inputTags_{{ grupo.pk }}[i].checked) {
-                                                                                                            total_{{ grupo.pk }} = total_{{ grupo.pk }} + 1;
-                                                                                                        }
-
-                                                                                                        if (total_{{ grupo.pk }} > parseInt({{ grupo.limitador }})) {
-                                                                                                            swal('Escolha apenas {{ grupo.limitador }} opcionais', '', 'warning');
-                                                                                                            inputTags_{{ grupo.pk }}[i].checked = false;
-                                                                                                            return false;
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            </script>
-                                                                                        {% endif %}
-                                                                                    </div>
-
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                            <div class="modal fade" id="p{{ produto.pk }}" tabindex="-1"
+                                                                 role="dialog" aria-labelledby="exampleModalLabel"
+                                                                 aria-hidden="true">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header text-center">
+                                                                            <input name="produto"
+                                                                                   value="{{ produto.id }}"
+                                                                                   class="hidden"/>
+                                                                            <h3 class="modal-title">{{ produto.nome }}
+                                                                                (R$
+                                                                                {{ produto.preco_base|floatformat:2 }})</h3>
+                                                                            <button type="button" class="close fechar"
+                                                                                    data-dismiss="modal"
+                                                                                    aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="row text-center">
+                                                                                <div class="col-xs-12">
+                                                                                    <label><b>Descricao:</b></label>
+                                                                                    <p class="text-center">{{ produto.descricao }}</p>
                                                                                 </div>
-                                                                            {% endif %}
-                                                                        {% endfor %}
-                                                                        <hr/>
-                                                                        <div class="row">
-                                                                            <div class="col-xs-12">
+                                                                            </div>
+                                                                            <hr/>
+                                                                            {% for grupo in produto.grupo_set.all|order_by:'created_at' %}
+                                                                                {% if grupo.disponivel %}
+                                                                                    <div class="row">
+                                                                                        <div class="col-xs-12">
+                                                                                            <label><b>{{ grupo.titulo }}
+                                                                                                {% if grupo.obrigatoriedade %}
+                                                                                                    <b style="color: red;">*</b>
+                                                                                                {% endif %}
+                                                                                                :</b></label>
+
+                                                                                            {% if grupo.tipo == 'radio' %}
+                                                                                                {% for opcional in grupo.opcional_set.all|order_by:'created_at' %}
+                                                                                                    {% if opcional.disponivel %}
+                                                                                                        <div class="checkbox">
+                                                                                                            <label>
+                                                                                                                <input type="checkbox"
+                                                                                                                       name="checks"
+                                                                                                                       data-limitador-{{ grupo.pk }}="{{ grupo.limitador }}"
+                                                                                                                       data-value="{{ opcional.valor }}"
+                                                                                                                       value="{{ opcional.id }}"
+                                                                                                                       onclick="return keepcoun{{ grupo.pk }}t();">
+                                                                                                                {{ opcional.nome }}
+                                                                                                                (
+                                                                                                                {% if opcional.descricao %}
+                                                                                                                    {{ opcional.descricao }}{% endif %}
+                                                                                                                +R$ {{ opcional.valor }})
+                                                                                                            </label>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+                                                                                                {% endfor %}
+                                                                                                <script type="text/javascript">
+                                                                                                    function keepcoun{{ grupo.pk }}t() {
+                                                                                                        var inputTags_{{ grupo.pk }} = $('input[data-limitador-{{ grupo.pk }}={{ grupo.limitador }}]');
+                                                                                                        var total_{{ grupo.pk }} = 0;
+                                                                                                        for (var i = 0; i < inputTags_{{ grupo.pk }}.length; i++) {
+
+                                                                                                            if (inputTags_{{ grupo.pk }}[i].checked) {
+                                                                                                                total_{{ grupo.pk }} = total_{{ grupo.pk }} + 1;
+                                                                                                            }
+
+                                                                                                            if (total_{{ grupo.pk }} > parseInt({{ grupo.limitador }})) {
+                                                                                                                {% if grupo.limitador == '1' %}
+                                                                                                                    swal('Escolha apenas {{ grupo.limitador }} item', '', 'warning');
+                                                                                                                {% else %}
+                                                                                                                    swal('Escolha apenas {{ grupo.limitador }} opcionais', '', 'warning');
+                                                                                                                {% endif %}
+
+                                                                                                                inputTags_{{ grupo.pk }}[i].checked = false;
+                                                                                                                return false;
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                </script>
+                                                                                            {% else %}
+                                                                                                {% for opc in grupo.opcional_set.all|order_by:'created_at' %}
+                                                                                                    {% if opc.disponivel %}
+                                                                                                        <div class="checkbox">
+                                                                                                            <label>
+                                                                                                                <input type="checkbox"
+                                                                                                                       name="checks"
+                                                                                                                       data-limitador-{{ grupo.pk }}="{{ grupo.limitador }}"
+                                                                                                                       data-value="{{ opc.valor }}"
+                                                                                                                       value="{{ opc.id }}"
+                                                                                                                       onclick="return keepcoun{{ grupo.pk }}t();">
+                                                                                                                {{ opc.nome }}
+                                                                                                                (
+                                                                                                                {% if opc.descricao %}
+                                                                                                                    {{ opc.descricao }}{% endif %}
+                                                                                                                +R$ {{ opc.valor }})
+                                                                                                            </label>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+                                                                                                {% endfor %}
+                                                                                                <script type="text/javascript">
+                                                                                                    function keepcoun{{ grupo.pk }}t() {
+                                                                                                        var inputTags_{{ grupo.pk }} = $('input[data-limitador-{{ grupo.pk }}={{ grupo.limitador }}]');
+                                                                                                        var total_{{ grupo.pk }} = 0;
+                                                                                                        for (var i = 0; i < inputTags_{{ grupo.pk }}.length; i++) {
+
+                                                                                                            if (inputTags_{{ grupo.pk }}[i].checked) {
+                                                                                                                total_{{ grupo.pk }} = total_{{ grupo.pk }} + 1;
+                                                                                                            }
+
+                                                                                                            if (total_{{ grupo.pk }} > parseInt({{ grupo.limitador }})) {
+                                                                                                                swal('Escolha apenas {{ grupo.limitador }} opcionais', '', 'warning');
+                                                                                                                inputTags_{{ grupo.pk }}[i].checked = false;
+                                                                                                                return false;
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                </script>
+                                                                                            {% endif %}
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                            <hr/>
+                                                                            <div class="row">
+                                                                                <div class="col-xs-12">
                                                                             <textarea name="observacoes"
                                                                                       class="form-control"
                                                                                       placeholder="Observações"></textarea>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <div class="pull-left">
-                                                                            <h3>R$ <span
-                                                                                    id="total_item_{{ produto.pk }}"></span>
-                                                                            </h3>
-                                                                            <script>
-                                                                                $(document).ready(function () {
-                                                                                    $('#total_item_{{ produto.pk }}').text('{{ produto.preco_base }}');
-                                                                                    $('input').change(function () {
-                                                                                        var total_calc_{{ produto.pk }} = parseFloat('' +{{ produto.preco_base }});
-                                                                                        var all_{{ produto.pk }} = $("input:checked").map(function () {
-                                                                                            return $(this).data('value');
-                                                                                        });
-                                                                                        for (i = 0; i < all_{{ produto.pk }}.length; i++) {
-                                                                                            total_calc_{{ produto.pk }} = total_calc_{{ produto.pk }} + parseFloat(all_{{ produto.pk }}[i]);
-                                                                                        }
-                                                                                        $('#total_item_{{ produto.pk }}').text('' + total_calc_{{ produto.pk }});
-                                                                                    })
-                                                                                });
-                                                                            </script>
-                                                                        </div>
-                                                                        <div class="pull-right">
-                                                                            <button type="button" onclick="return "
-                                                                                    class="btn btn-secondary fechar"
-                                                                                    data-dismiss="modal">Fechar
-                                                                            </button>
-                                                                            <button type="submit"
-                                                                                    class="btn btn-danger">
-                                                                                Adicionar
-                                                                            </button>
+                                                                        <div class="modal-footer">
+                                                                            <div class="pull-left">
+                                                                                <h3>R$ <span
+                                                                                        id="total_item_{{ produto.pk }}"></span>
+                                                                                </h3>
+                                                                                <script>
+                                                                                    $(document).ready(function () {
+                                                                                        $('#total_item_{{ produto.pk }}').text(parseFloat('{{ produto.preco_base }}').toFixed(2));
+                                                                                        $('input').change(function () {
+                                                                                            var total_calc_{{ produto.pk }} = parseFloat('' +{{ produto.preco_base }});
+                                                                                            var all_{{ produto.pk }} = $("input:checked").map(function () {
+                                                                                                return $(this).data('value');
+                                                                                            });
+                                                                                            for (i = 0; i < all_{{ produto.pk }}.length; i++) {
+                                                                                                total_calc_{{ produto.pk }} = total_calc_{{ produto.pk }} + parseFloat(all_{{ produto.pk }}[i]);
+                                                                                            }
+                                                                                            $('#total_item_{{ produto.pk }}').text(parseFloat(total_calc_{{ produto.pk }}).toFixed(2));
+                                                                                        })
+                                                                                    });
+                                                                                </script>
+                                                                            </div>
+                                                                            <div class="pull-right">
+                                                                                <button type="button" onclick="return "
+                                                                                        class="btn btn-secondary fechar"
+                                                                                        data-dismiss="modal">Fechar
+                                                                                </button>
+                                                                                <button type="submit"
+                                                                                        class="btn btn-danger">
+                                                                                    Adicionar
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </form>
-                                                {% endif %}
-                                            {% endfor %}
+                                                        </form>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endif %}
                                 {% endif %}
 
                             {% endfor %}
-
+                            <form action="{% url 'login_cliente' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal fade" id="login_pop" tabindex="-1"
+                                     role="dialog" aria-labelledby="exampleModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header text-center">
+                                                <h3 class="modal-title">
+                                                    Login
+                                                </h3>
+                                                <button type="button" class="close fechar"
+                                                        data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row text-center">
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label required pull-left" for="email">Numero
+                                                                Telefone<sup
+                                                                        style="color:red">*</sup> <h6>(somente
+                                                                    números)</h6></label>
+                                                            <input class="form-control input-lg" type="text"
+                                                                   name="telefone"
+                                                                   id="id_telefone"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label required pull-left" for="email">Senha<sup
+                                                                    style="color:red">*</sup></label>
+                                                            <input class="form-control input-lg" type="password"
+                                                                   name="password" id="id_password"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12">
+                                                        <button type="submit" id="btn_entrar"
+                                                                class="btn btn-primary btn-block">Entrar
+                                                        </button>
+                                                    </div>
+                                                    <hr/>
+                                                    <div class="col-xs-12">
+                                                        <br/>
+                                                        <br/>
+                                                        <br/>
+                                                        <a href="{% url 'registro_cliente' %}">Fazer meu Cadastro.</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <br/><br/>
                         <p>Todas as imagens são meramente ilustrativas.</p>
@@ -301,8 +400,8 @@
                             <h3>Meu Pedido</h3>
                         </div>
                         <p class="text-muted">Verifique abaixo seu itens no pedido</p>
-                        <div class="table-responsive">
-                            <table class="table table-responsive">
+                        <div class="">
+                            <table class="table">
                                 <tbody>
                                 {% for itempedido in pedido_obj.itempedido_set.all %}
                                     <tr>
@@ -361,6 +460,23 @@
                             </div>
                         </div>
                     </div>
+                    {% if loja.bairrogratis_set.first %}
+                        <div class="box box mt-0 mb-4 p-0">
+                            <div class="box-header mt-0">
+                                <h4>Entrega Grátis</h4>
+                            </div>
+                            <p class="text-muted">
+                            <ul>
+                                {% for bairro in loja.bairrogratis_set.all %}
+                                    <li>{{ bairro }}</li>
+                                {% endfor %}
+                            </ul>
+
+
+                            </p>
+                            <p>{{ loja.endereco_completo }}</p>
+                        </div>
+                    {% endif %}
                     {% if loja.endereco_completo %}
                         <div class="box box mt-0 mb-4 p-0">
                             <div class="box-header mt-0">
@@ -428,7 +544,6 @@
             </div>
         </div>
     </section>
-
 
     <script type="text/javascript">
         $(document).ready(function () {

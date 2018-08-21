@@ -405,16 +405,16 @@ class FormRegisterCliente(BaseForm):
                                                                  'placeholder': 'Senha'}))
     telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
                                                              'maxlength': 15,
-                                                             'placeholder': 'Telefone'}))
+                                                             'placeholder': 'Numero Telefone'}))
 
-    cpf = forms.CharField(widget=forms.TextInput(attrs={'required': True,
-                                                        'maxlength': 12,
-                                                        'placeholder': 'CPF'}))
+    # cpf = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+    #                                                     'maxlength': 12,
+    #                                                     'placeholder': 'CPF'}))
 
 
 class FormLoginCliente(BaseForm):
-    cpf = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+    telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
                                                         'maxlength': 12,
-                                                        'placeholder': 'CPF'}))
+                                                        'placeholder': 'Numero Telefone'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'required': True,
                                                                  'placeholder': 'Senha'}))

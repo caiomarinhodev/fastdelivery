@@ -139,14 +139,17 @@
         <form class="form-horizontal" method="post"
               style="margin-top: 20px; margin-left: 15%;margin-right: 10% ">
             <div class="box-body">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <center><label>Valor Total </label></center>
+                {% if not pedido.estabelecimento.motoboys.all|has_motoboy:user %}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <center><label>Valor Total </label></center>
+                        </div>
+                        <div class="col-xs-12">
+                            <center><h3 style="margin-top: 0px;">R$ {{ pedido.valor_total|floatformat:2 }}</h3></center>
+                        </div>
                     </div>
-                    <div class="col-xs-12">
-                        <center><h3 style="margin-top: 0px;">R$ {{ pedido.valor_total|floatformat:2 }}</h3></center>
-                    </div>
-                </div>
+                {% endif %}
+
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="col-xs-12">

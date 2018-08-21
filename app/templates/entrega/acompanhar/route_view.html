@@ -285,7 +285,7 @@
                                                         <script>
                                                             $(document).ready(function () {
                                                                 $('.fin_entrega_{{ ponto.id }}').click(function () {
-                                                                    play('alert');
+{#                                                                    play('alert');#}
                                                                     swal({
                                                                         title: "Deseja marcar como concluido esta entrega?",
                                                                         text: 'Se este for seu ultimo ponto de entrega, não esqueça de finalizar o pedido por completo.',
@@ -341,7 +341,6 @@
                             <script>
                                 $(document).ready(function () {
                                     $('.finalizar_{{ pedido.id }}').click(function () {
-                                        play('alert');
                                         swal({
                                             title: "Concluir a rota?",
                                             text: '',

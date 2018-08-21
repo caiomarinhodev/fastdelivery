@@ -9,8 +9,10 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <div class="form-group">
                         <h2><i class="fa fa-map-marker"></i> Onde você está?</h2>
-                        <select class="form-control input-lg">
-                            <option value="Campina Grande">Campina Grande</option>
+                        <select class="form-control input-lg"
+                                onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                            <option value="http://focusdelivery.com.br">Campina Grande</option>
+                            <option value="http://guarabira.focusdelivery.com.br">Guarabira</option>
                         </select>
                     </div>
                 </div>
@@ -31,13 +33,48 @@
                         {% for loja in lojas %}
                             {% if loja.configuration.has_loja_online %}
                                 <a href="{% url 'view_loja' loja.pk %}">
-                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 text-center"
-                                         style="margin-bottom: 35px;">
+                                    <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 text-center"
+                                    >
                                         <div class="thumbnail text-center">
 
                                             <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"
                                                  src="{{ loja.photo }}"/>
-                                            <label class="label" style="color: #0c0c0c">{{ loja.user.first_name }}</label>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <label class="label"
+                                                               style="color: #0c0c0c; font-size: 10px;">{{ loja.user.first_name }}</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        {% if loja.is_online %}
+                                                            <label class="label label-success">
+                                                                Online
+                                                            </label>
+                                                        {% else %}
+                                                            <center>
+                                                                <label class="label label-danger">
+                                                                    Offline
+                                                                </label>
+                                                            </center>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                        {% for loja in lojas_off %}
+                            {% if loja.configuration.has_loja_online %}
+                                <a href="{% url 'view_loja' loja.pk %}">
+                                    <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+                                        <div class="thumbnail text-center">
+
+                                            <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"
+                                                 src="{{ loja.photo }}"/>
+                                            <label class="label"
+                                                   style="color: #0c0c0c">{{ loja.user.first_name }}</label>
                                             {% if loja.is_online %}
                                                 <label class="label label-success">
                                                     Online
@@ -60,31 +97,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="row">
-                        {% for loja in lojas_off %}
-                            {% if loja.configuration.has_loja_online %}
-                                <a href="{% url 'view_loja' loja.pk %}">
-                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2" style="margin-bottom: 35px;">
-                                        <div class="thumbnail text-center">
 
-                                            <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"
-                                                 src="{{ loja.photo }}" />
-                                            <label class="label" style="color: #0c0c0c">{{ loja.user.first_name }}</label>
-                                            {% if loja.is_online %}
-                                                <label class="label label-success">
-                                                    Online
-                                                </label>
-                                            {% else %}
-                                                <center>
-                                                    <label class="label label-danger">
-                                                        Offline
-                                                    </label>
-                                                </center>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </a>
-                            {% endif %}
-                        {% endfor %}
                     </div>
                 </div>
             </div>

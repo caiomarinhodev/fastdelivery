@@ -14,6 +14,9 @@ class PontoInline(admin.TabularInline):
 
 
 class MotoristaAdmin(admin.ModelAdmin):
+    search_fields = (
+        'user__first_name',
+    )
     list_display = (
         'id', 'user', 'nome_completo', 'cpf', 'phone', 'is_online', 'placa', 'is_approved', 'creditos_expirados',
         'ocupado', 'photo', 'created_at')
@@ -23,6 +26,9 @@ class MotoristaAdmin(admin.ModelAdmin):
 
 
 class EstabelecimentoAdmin(admin.ModelAdmin):
+    search_fields = (
+        'user__first_name',
+    )
     list_display = ('user', 'nome_loja', 'phone', 'cnpj', 'id', 'full_address', 'photo', 'is_online', 'created_at')
 
     def nome_loja(self, obj):
@@ -30,11 +36,19 @@ class EstabelecimentoAdmin(admin.ModelAdmin):
 
 
 class PontoAdmin(admin.ModelAdmin):
+    list_filter = ('bairro',)
+    search_fields = (
+        'telefone',
+    )
     list_display = (
         'id', 'cliente', 'telefone', 'endereco', 'numero', 'bairro', 'created_at', 'status', 'duration', 'distance')
 
 
 class FolhaPagamentoAdmin(admin.ModelAdmin):
+    list_filter = ('estabelecimento', 'status_pagamento',)
+    search_fields = (
+        'estabelecimento__user__first_name',
+    )
     list_display = ('id', 'loja', 'valor_total', 'valor_cobrar', 'link_pagamento', 'status_pagamento', 'created_at',)
 
     def loja(self, obj):
@@ -57,6 +71,9 @@ class LoggerAdmin(admin.ModelAdmin):
 
 
 class PedidoAdmin(admin.ModelAdmin):
+    search_fields = (
+        'estabelecimento__user__first_name',
+    )
     inlines = [
         PontoInline,
     ]
@@ -165,16 +182,22 @@ class FotoProdutoAdmin(admin.ModelAdmin):
 
 
 class ClienteAdmin(admin.ModelAdmin):
+    search_fields = (
+        'telefone',
+    )
     inlines = [EnderecoInline, ]
     list_display = (
-        'id', 'usuario', 'qtd_pedidos', 'cpf', 'telefone', 'email_cliente', 'is_online',
+        'id', 'usuario', 'qtd_pedidos', 'nome_cliente', 'telefone', 'email_cliente', 'is_online',
         'created_at')
 
     def email_cliente(self, obj):
         return obj.usuario.email
 
     def qtd_pedidos(self, obj):
-        return obj.pedido_set.all()
+        return obj.request_set.all()
+
+    def nome_cliente(self, obj):
+        return obj.usuario.first_name
 
 
 class EnderecoAdmin(admin.ModelAdmin):
@@ -191,6 +214,10 @@ class EstabelecimentoAdmin(admin.ModelAdmin):
 
 
 class RequestAdmin(admin.ModelAdmin):
+    list_filter = ('status_pedido', 'endereco_entrega__bairro')
+    search_fields = (
+        'cliente__usuario__first_name',
+    )
     inlines = [
         ItemPedidoInline,
     ]
@@ -208,13 +235,14 @@ class BairroAdmin(admin.ModelAdmin):
 
 
 class GrupoAdmin(admin.ModelAdmin):
+    list_filter = ('produto__categoria__estabelecimento', 'obrigatoriedade')
+    search_fields = (
+        'identificador',
+    )
     list_display = (
-        'identificador', 'id', 'titulo', 'produto', 'limitador', 'estabelecimento', 'created_at', 'obrigatoriedade',
+        'identificador', 'id', 'titulo', 'produto', 'limitador', 'created_at', 'obrigatoriedade',
         'disponivel')
     inlines = [OpcionalInline, ]
-
-    def estabelecimento(self, obj):
-        return obj.produto.categoria.estabelecimento
 
 
 class ProdutoInline(admin.TabularInline):
@@ -222,6 +250,10 @@ class ProdutoInline(admin.TabularInline):
 
 
 class CategoriaAdmin(admin.ModelAdmin):
+    list_filter = ('estabelecimento', 'disponibilidade')
+    search_fields = (
+        'nome',
+    )
     inlines = [
         ProdutoInline,
     ]
@@ -232,6 +264,10 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 
 class ProdutoAdmin(admin.ModelAdmin):
+    list_filter = ('categoria__estabelecimento', 'disponivel')
+    search_fields = (
+        'nome',
+    )
     inlines = [
         FotoProdutoInline,
         GrupoInline,

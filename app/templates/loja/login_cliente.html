@@ -188,9 +188,9 @@
                                     {% csrf_token %}
                                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
                                         <div class="form-group">
-                                            <label class="control-label required" for="email">CPF<sup
+                                            <label class="control-label required" for="email">Numero Telefone<sup
                                                     style="color:red">*</sup> <h6>(somente números)</h6></label>
-                                            {{ form.cpf }}
+                                            {{ form.telefone }}
                                         </div>
                                     </div>
                                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
@@ -201,7 +201,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12 col-md-12 col-sm-6 col-xs-12">
-                                        <button type="button" id="btn_entrar" class="btn btn-primary btn-block">Entrar</button>
+                                        <button type="submit" id="btn_entrar" class="btn btn-primary btn-block">Entrar</button>
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" value="">
@@ -228,22 +228,6 @@
         </div>
         <!--/.forms-->
     </section>
-
-    <script>
-        $(document).ready(function () {
-            $('#btn_entrar').click(function () {
-                var cpf = String($('[name=cpf]').val());
-                console.log(cpf);
-                if (!valida_cpf(cpf)) {
-                    $('#loading').hide();
-                    swal("CPF Inválido", "Insira um CPF válido", "error");
-                } else {
-                    $('form').submit();
-                }
-            });
-        });
-    </script>
-
 
 
 {% endblock %}

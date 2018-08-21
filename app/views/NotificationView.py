@@ -70,13 +70,17 @@ def notificar_all_delivered_loja(request):
 
 @require_http_methods(["GET"])
 def notificar_order_delivered_loja(request):
-    notificacao = Notification.objects.filter(to=request.user, type_message='ORDER_DELIVERED', is_read=False).last()
-    context = Context({'notificacao': notificacao, 'user': request.user})
-    return_str = render_block_to_string('entrega/includes/notificacao.html', context)
-    if notificacao:
-        notificacao.is_read = True
-        notificacao.save()
-    return HttpResponse(return_str)
+    try:
+        notificacao = Notification.objects.filter(to=request.user, type_message='ORDER_DELIVERED', is_read=False).last()
+        context = Context({'notificacao': notificacao, 'user': request.user})
+        return_str = render_block_to_string('entrega/includes/notificacao.html', context)
+        if notificacao:
+            notificacao.is_read = True
+            notificacao.save()
+        return HttpResponse(return_str)
+    except (Exception,):
+        return HttpResponse("")
+
 
 
 @require_http_methods(["GET"])

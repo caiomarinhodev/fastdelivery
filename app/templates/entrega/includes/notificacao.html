@@ -44,10 +44,7 @@
                 text: '{{ notificacao.message }}',
                 type: 'success',
                 confirmButtonClass: 'btn-primary',
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true
-            }, function () {
-                window.location.href = window.location.href;
+                closeOnConfirm: true
             });
 
         {% elif notificacao.type_message == 'ALL_DELIVERED' %}
@@ -57,18 +54,18 @@
                 text: '{{ notificacao.message }}',
                 type: 'success',
                 closeOnConfirm: true,
-                confirmButtonClass: 'btn-primary',
+                confirmButtonClass: 'btn-primary'
             });
 
         {% elif notificacao.type_message == 'ORDER_DELIVERED' %}
 {#            play('alert');#}
-            swal({
-                title: "Motorista finalizou uma entrega!",
-                text: '{{ notificacao.message }}',
-                type: 'success',
-                closeOnConfirm: true,
-                confirmButtonClass: 'btn-primary',
-            });
+{#            swal({#}
+{#                title: "Motorista finalizou uma entrega!",#}
+{#                text: '{{ notificacao.message }}',#}
+{#                type: 'success',#}
+{#                closeOnConfirm: true,#}
+{#                confirmButtonClass: 'btn-primary',#}
+{#            });#}
 
         {% elif notificacao.type_message == 'ADMIN_MESSAGE' %}
             swal({
@@ -76,7 +73,7 @@
                 text: '{{ notificacao.message }}',
                 type: 'warning',
                 closeOnConfirm: true,
-                confirmButtonClass: 'btn-primary',
+                confirmButtonClass: 'btn-primary'
             });
         {% elif notificacao.type_message == 'LOJA_MESSAGE' %}
             play('alert');
@@ -85,7 +82,7 @@
             play('alert');
             swal("Mensagem!", "O Motorista lhe enviou uma mensagem, va para o CHAT.", "warning");
         {% elif notificacao.type_message == 'ENABLE_ROTA' %}
-            play('alert');
+{#            play('alert');#}
             swal({
                 title: "Rota gerada!",
                 text: '{{ notificacao.message }}',

@@ -75,7 +75,6 @@ def make_itens(req):
             p = it.produto
             message += ("<br/><b>" + unicode(p.nome))+"</b>"
             for opc in it.opcionalchoice_set.all():
-                print(unicode(opc.opcional.grupo.titulo))
                 if unicode(opc.opcional.grupo.titulo) in dic:
                     dic[unicode(opc.opcional.grupo.titulo)] += [opc.opcional.nome]
                 else:
@@ -95,7 +94,7 @@ def make_obs(req):
     try:
         message += '<li>Forma de Pagamento: ' + str(req.forma_pagamento) + ' </li>'
         message += '<li>Valor Total: ' + floatformat(str(req.valor_total), 2) + ' </li>'
-        message += '<li>Troco para: ' + floatformat(str(req.forma_pagamento), 2) + ' ('
+        message += '<li>Troco para: ' + req.troco + ' ('
         if req.resultado_troco:
             message += floatformat(str(req.resultado_troco), 2) + ')</li>'
         else:
@@ -104,7 +103,7 @@ def make_obs(req):
     except (Exception,):
         message += '<li>Forma de Pagamento: ' + unicode(req.forma_pagamento) + ' </li>'
         message += '<li>Valor Total: ' + floatformat(unicode(req.valor_total), 2) + ' </li>'
-        message += '<li>Troco para: ' + floatformat(unicode(req.forma_pagamento), 2) + ' ('
+        message += '<li>Troco para: ' + unicode(req.troco) + ' ('
         if req.resultado_troco:
             message += floatformat(unicode(req.resultado_troco), 2) + ')</li>'
         else:

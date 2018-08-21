@@ -74,6 +74,7 @@ def add_cart(request, id_loja):
                 cria_item_pedido(checks, pedido, produto, obs)
             else:
                 messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
+                return redirect('/loja/' + str(pedido.estabelecimento.id))
         else:
             messages.error(request, u'Você deve comprar produtos no mesmo estabelecimento')
             return redirect('/loja/' + str(pedido.estabelecimento.id))
@@ -88,6 +89,7 @@ def add_cart(request, id_loja):
             cria_item_pedido(checks, pedido, produto, obs)
         else:
             messages.error(request, u'Você deve selecionar 1 item das opcoes com *(asterisco)')
+            return redirect('/loja/' + str(pedido.estabelecimento.id))
     pedido.save()
     messages.error(request, u'Para fazer um pedido você deve estar logado')
     return redirect('/define/login/')
@@ -129,63 +131,77 @@ class FinalizaRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
         return super(FinalizaRequest, self).get(request, *args, **kwargs)
 
 
+class CarrinhoReqView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 'loja/carrinho.html'
+    login_url = '/define/login/'
+
+    def get(self, request, *args, **kwargs):
+        return super(CarrinhoReqView, self).get(request, *args, **kwargs)
+
+
 def submit_pedido(request):
     data = request.POST
-    cliente = request.user.cliente
-    pedido = Request.objects.get(id=request.session['pedido'])
-    pedido.cliente = cliente
-    troco = None
     endereco = None
-    if 'endereco' in data:
-        if data['endereco'] != '':
-            endereco = Endereco.objects.get(id=data['endereco'])
-            endereco.save()
-    else:
-        if ('bairro' in data) and ('rua' in data) and ('numero' in data) and ('complemento' in data):
-            if (data['bairro'] != u'') and (data['rua'] != u'' and (data['numero'] != u'')):
-                bairro = Bairro.objects.get(id=data['bairro'])
-                endereco = Endereco(cliente=cliente, bairro=bairro, endereco=data['rua'], numero=data['numero'],
-                                    complemento=data['complemento'])
+    try:
+        cliente = request.user.cliente
+        pedido = Request.objects.get(id=request.session['pedido'])
+        pedido.cliente = cliente
+    except (Exception,):
+        messages.error(request, 'Faça Login para finalizar o pedido')
+        return redirect('/define/login/')
+    try:
+        if 'endereco' in data:
+            if data['endereco'] != '':
+                endereco = Endereco.objects.get(id=data['endereco'])
                 endereco.save()
+        else:
+            if ('bairro' in data) and ('rua' in data) and ('numero' in data) and ('complemento' in data):
+                if (data['bairro'] != u'') and (data['rua'] != u'' and (data['numero'] != u'')):
+                    bairro = Bairro.objects.get(id=data['bairro'])
+                    endereco = Endereco(cliente=cliente, bairro=bairro, endereco=data['rua'], numero=data['numero'],
+                                        complemento=data['complemento'])
+                    endereco.save()
+                else:
+                    messages.error(request, u'Nao conseguimos cadastrar seu endereco')
+                    return redirect('/finaliza-pedido/')
+            else:
+                messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
+                return redirect('/finaliza-pedido/')
+    except (Exception,):
+        messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
+        return redirect('/finaliza-pedido/')
+    try:
+        if 'pgto' in data:
+            if data['pgto'] != u'':
+                forma_pagamento = FormaPagamento.objects.get(id=data['pgto'])
+            else:
+                messages.error(request, u'Insira uma forma de pagamento')
+                return redirect('/finaliza-pedido/')
+        else:
+            messages.error(request, u'Insira uma forma de pagamento')
+            return redirect('/finaliza-pedido/')
+    except (Exception,):
+        messages.error(request, u'Insira uma forma de pagamento')
+        return redirect('/finaliza-pedido/')
+    try:
+        pedido.troco = data['troco']
+    except (Exception,):
+        pass
+    try:
+        pedido.forma_pagamento = forma_pagamento
+        if endereco:
+            pedido.endereco_entrega = endereco
         else:
             messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
             return redirect('/finaliza-pedido/')
-    if 'pgto' in data:
-        if data['pgto'] != u'':
-            forma_pagamento = FormaPagamento.objects.get(id=data['pgto'])
-            if forma_pagamento.forma == 'DINHEIRO':
-                if 'troco' in data:
-                    if data['troco'] != u'':
-                        pedido.troco = data['troco']
-                    else:
-                        messages.error(request, u'Insira o valor do Troco')
-                        return redirect('/finaliza-pedido/')
-                else:
-                    messages.error(request, u'Insira o valor do Troco')
-                    return redirect('/finaliza-pedido/')
-    else:
-        messages.error(request, u'Insira uma forma de pagamento')
-        return redirect('/finaliza-pedido/')
-    # if 'entrega' in data:
-    #     forma_entrega = FormaEntrega.objects.get(id=data['entrega'])
-    # else:
-    #     messages.error(request, u'Defina uma forma de entrega')
-    #     return redirect('/finaliza-pedido/')
-    if 'troco' in data:
-        if data['troco'] != u'':
-            pedido.troco = data['troco']
-    pedido.forma_pagamento = forma_pagamento
-    # pedido.forma_entrega = forma_entrega
-    if endereco:
-        pedido.endereco_entrega = endereco
-    else:
+        pedido.save()
+        messages.success(request, 'Pedido Realizado com Sucesso')
+        message = make_message(pedido)
+        n = Notificacao(type_message='NOVO_PEDIDO', to=pedido.estabelecimento.user, message=message, pedido=pedido)
+        n.save()
+    except (Exception,):
         messages.error(request, u'Selecione o endereco de entrega ou Informe o endereco de entrega')
         return redirect('/finaliza-pedido/')
-    pedido.save()
-    messages.success(request, 'Pedido Realizado com Sucesso')
-    message = make_message(pedido)
-    n = Notificacao(type_message='NOVO_PEDIDO', to=pedido.estabelecimento.user, message=message, pedido=pedido)
-    n.save()
     return redirect('/acompanhar-pedido/' + str(pedido.pk))
 
 

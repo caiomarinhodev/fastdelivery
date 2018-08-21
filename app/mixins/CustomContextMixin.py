@@ -54,6 +54,12 @@ class CustomContextMixin(ContextMixin):
                                                                     status=True, is_complete=False,
                                                                     coletado=False).order_by(
                     '-created_at')
+                kwargs['vendas_totais'] = Request.objects.filter(status_pedido='ENTREGUE', estabelecimento=self.request.user.estabelecimento)
+                kwargs['vendas_mes'] = Request.objects.filter(created_at__month=datetime.now().month,
+                                                              created_at__year=datetime.now().year,
+                                                              status_pedido='ENTREGUE',
+                                                              estabelecimento=self.request.user.estabelecimento
+                                                              )
 
         except:
             if 'messages_m' not in kwargs:
@@ -95,6 +101,7 @@ class ListMotoristasMixin(ContextMixin):
 class DashboardListMixin(ContextMixin):
     def get_context_data(self, **kwargs):
         now = datetime.now()
+        kwargs['lojas'] = Estabelecimento.objects.all().order_by('-created_at')
         kwargs['motoristas_online'] = Motorista.objects.filter(is_online=True)
         kwargs['motoristas_livres'] = Motorista.objects.filter(is_online=True, ocupado=False)
         kwargs['motoristas_ocupados'] = Motorista.objects.filter(is_online=True, ocupado=True)
@@ -121,10 +128,10 @@ class DashboardMixin(ContextMixin):
         kwargs['bd_space'] = float(float(float(
             len(motoristas) + len(pedidos) + len(users) + len(notificacoes) + len(locations) + len(bairros) + len(
                 estabelecimentos) + len(pontos)) / 10000) * 100)
-        kwargs['num_pedidos_entregues'] = Pedido.objects.filter(created_at__month=datetime.now().month,
+        kwargs['num_pedidos_entregues'] = Pedido.objects.filter(created_at__month=datetime.now().month, created_at__year=datetime.now().year,
                                                                 is_complete=True)
-        kwargs['pedidos_do_mes'] = Pedido.objects.filter(created_at__month=datetime.now().month).order_by('-created_at')
-        kwargs['pedidos_entregues'] = Pedido.objects.filter(is_complete=True,
+        kwargs['pedidos_do_mes'] = Pedido.objects.filter(created_at__month=datetime.now().month, created_at__year=datetime.now().year).order_by('-created_at')
+        kwargs['pedidos_entregues'] = Pedido.objects.filter(is_complete=True, created_at__year=datetime.now().year,
                                                             created_at__month=datetime.now().month).order_by(
             '-created_at')
         kwargs['pedidos_pendentes'] = Pedido.objects.filter(status=True)
@@ -133,7 +140,9 @@ class DashboardMixin(ContextMixin):
         kwargs['motoristas_livres'] = Motorista.objects.filter(is_online=True, ocupado=False)
         kwargs['motoristas_ocupados'] = Motorista.objects.filter(is_online=True, ocupado=True)
         kwargs['lojas'] = Estabelecimento.objects.all().order_by('-created_at')
-        kwargs['pontos_mes'] = Ponto.objects.filter(created_at__month=now.month).order_by('bairro')
+        kwargs['pontos_mes'] = Ponto.objects.filter(created_at__month=now.month, created_at__year=datetime.now().year).order_by('bairro')
         kwargs['pontos_all'] = Ponto.objects.all().order_by('bairro')
         kwargs['address_all'] = Ponto.objects.all().order_by('endereco')
+        kwargs['vendas_totais'] = Request.objects.filter(status_pedido='ENTREGUE')
+        kwargs['vendas_mes'] = Request.objects.filter(created_at__month=datetime.now().month, created_at__year=datetime.now().year, status_pedido='ENTREGUE')
         return super(DashboardMixin, self).get_context_data(**kwargs)
