@@ -17,6 +17,7 @@
                 <!-- Product item-->
                 {% for loja in lojas %}
                     {% if loja.configuration.has_loja_online %}
+                        {#                        Testar app small na lista de lojas e produtos #}
                         <div>
                             <a href="{% url 'view_loja_app' loja.id %}">
                                 <div class="col s6 m4 l3 col-produc">
@@ -25,7 +26,10 @@
                                             <div class="product-list-img">
                                                 <div class="pli-one">
                                                     <div class="pli-two">
-                                                        <a href="{% url 'view_loja_app' loja.id %}">
+                                                        <a href="{% url 'view_loja_app' loja.id %}"
+                                                           class="tool" data-toggle="tooltip"
+                                                           title="{{ loja.user.first_name }}"
+                                                           data-tooltip="{{ loja.user.first_name }}">
                                                             <img title="{{ loja.user.first_name }}"
                                                                  alt="{{ loja.user.first_name }}"
                                                                  src="{{ loja.photo }}">
@@ -33,9 +37,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5>
-                                                <a href="{% url 'view_loja_app' loja.id %}">{{ loja.user.first_name }}</a>
-                                            </h5>
+{#                                            <a href="#" data-toggle="tooltip"#}
+{#                                               title="{{ loja.user.first_name }}">{{ loja.user.first_name }}</a>#}
+                                            {#                                            <h5>#}
+                                            {#                                                <a href="{% url 'view_loja_app' loja.id %}">{{ loja.user.first_name }}</a>#}
+                                            {#                                            </h5>#}
                                         </div>
                                         <div class="bp-bottom">
                                             <a href="{% url 'view_loja_app' loja.id %}" class="btn button-add-cart">Ver

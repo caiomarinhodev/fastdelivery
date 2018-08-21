@@ -31,6 +31,9 @@
     <!-- Magnific Popup core CSS file -->
     <link rel="stylesheet" href="{% static 'gromart/node_modules/magnific-popup/dist/magnific-popup.css' %}">
     <link href="{% static 'css/sweetalert.min.css' %}" rel="stylesheet">
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
+{#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
 </head>
 <body id="homepage">
 <!-- BEGIN PRELOADING -->
@@ -60,22 +63,19 @@
 <!-- END FOOTER -->
 <!-- Script -->
 <script src="{% static 'gromart/js/jquery.min.js' %}"></script>
-<script src="{% static 'gromart/js/materialize.min.js' %}"></script>
-<!-- Owl carousel -->
-<script src="{% static 'gromart/node_modules/owl.carousel/dist/owl.carousel.min.js' %}"></script>
-<!-- Magnific Popup core JS file -->
-<script src="{% static 'gromart/node_modules/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
-<!-- Slick JS -->
-<script src="{% static 'gromart/node_modules/slick-carousel/slick/slick.min.js' %}"></script>
-<!-- Custom script -->
-<script src="{% static 'gromart/js/custom.js' %}"></script>
-<script src="{% static 'js/sweetalert.min.js' %}"></script>
+
 <script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
-{#<script>#}
-{#    $(document).ready(function(){#}
-{#       $('select').form#}
-{#    });#}
-{#</script>#}
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+<script src="{% static 'gromart/node_modules/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+<script src="{% static 'gromart/js/materialize.min.js' %}"></script>
+<script src="{% static 'gromart/node_modules/slick-carousel/slick/slick.min.js' %}"></script>
+<script src="{% static 'gromart/node_modules/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+<script src="{% static 'gromart/js/custom.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('.tool').tooltip();
+    });
+</script>
 
 {% if messages %}
     {% for message in messages %}
