@@ -37,8 +37,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-{#                                            <a href="#" data-toggle="tooltip"#}
-{#                                               title="{{ loja.user.first_name }}">{{ loja.user.first_name }}</a>#}
+                                            {#                                            <a href="#" data-toggle="tooltip"#}
+                                            {#                                               title="{{ loja.user.first_name }}">{{ loja.user.first_name }}</a>#}
                                             {#                                            <h5>#}
                                             {#                                                <a href="{% url 'view_loja_app' loja.id %}">{{ loja.user.first_name }}</a>#}
                                             {#                                            </h5>#}
@@ -63,15 +63,17 @@
                                             <div class="product-list-img">
                                                 <div class="pli-one">
                                                     <div class="pli-two">
-                                                        <img title="{{ loja.user.first_name }}"
-                                                             alt="{{ loja.user.first_name }}"
-                                                             src="{{ loja.photo }}">
+                                                        <a href="{% url 'view_loja_app' loja.id %}"
+                                                           class="tool" data-toggle="tooltip"
+                                                           title="{{ loja.user.first_name }}"
+                                                           data-tooltip="{{ loja.user.first_name }}">
+                                                            <img title="{{ loja.user.first_name }}"
+                                                                 alt="{{ loja.user.first_name }}"
+                                                                 src="{{ loja.photo }}">
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <h5>
-                                                <a href="{% url 'view_loja_app' loja.id %}">{{ loja.user.first_name }}</a>
-                                            </h5>
                                         </div>
                                         <div class="bp-bottom">
                                             <a href="{% url 'view_loja_app' loja.id %}" class="btn button-add-cart">Ver
