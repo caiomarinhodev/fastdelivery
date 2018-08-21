@@ -44,8 +44,10 @@
                                             {#                                            </h5>#}
                                         </div>
                                         <div class="bp-bottom">
-                                            <a href="{% url 'view_loja_app' loja.id %}" class="btn button-add-cart">Ver
-                                                Loja</a>
+                                            <a href="{% url 'view_loja_app' loja.id %}"
+                                               class="btn button-add-cart tool" data-toggle="tooltip"
+                                                           title="{{ loja.user.first_name }}"
+                                                           data-tooltip="{{ loja.user.first_name }}">Ver Loja</a>
                                         </div>
                                     </div>
                                 </div>
@@ -58,7 +60,7 @@
                         <div>
                             <a href="{% url 'view_loja_app' loja.id %}">
                                 <div class="col s6 m4 l3 col-produc">
-                                    <div class="box-product" style="opacity: 0.5; pointer-events: none;">
+                                    <div class="box-product">
                                         <div class="bp-top">
                                             <div class="product-list-img">
                                                 <div class="pli-one">

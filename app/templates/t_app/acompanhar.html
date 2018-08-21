@@ -18,9 +18,9 @@
                 <div>
                     <div class="col s12 col-produc">
                         <div class="box-product">
-                            <h3>
+                            <h4>
                                 Pedido #{{ pedido_obj.id }} em {{ pedido_obj.estabelecimento }}
-                            </h3>
+                            </h4>
                         </div>
                     </div>
                 </div>
@@ -136,36 +136,36 @@
                                 <div class="price">
                                     {% if pedido_obj.status_pedido == 'AGUARDANDO' %}
                                         <div class="box-simple box-dark same-height">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             <h5>Aguarde enquanto a loja processa seu pedido.</h5>
                                         </div>
                                     {% elif pedido_obj.status_pedido == 'ACEITO' %}
-                                        <div class="box-simple box-dark same-height bg-blue"
-                                             style="background: #0055aa;">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                        <div class="box-simple box-dark same-height"
+                                             >
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             <h5>Seu pedido foi aceito pela loja, aguarde o preparo.</h5>
                                         </div>
                                     {% elif pedido_obj.status_pedido == 'REJEITADO' %}
-                                        <div class="box-simple box-dark same-height bg-red"
-                                             style="background: #843534;">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                        <div class="box-simple box-dark same-height "
+                                             >
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             <h5>Seu pedido foi rejeitado pela loja.</h5>
                                         </div>
                                     {% elif pedido_obj.status_pedido == 'PREPARANDO' %}
-                                        <div class="box-simple box-dark same-height bg-red"
-                                             style="background: #aa5500;">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                        <div class="box-simple box-dark same-height "
+                                             >
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             <h5>Seu pedido já está sendo preparado.</h5>
                                         </div>
                                     {% elif pedido_obj.status_pedido == 'ENTREGANDO' %}
-                                        <div class="box-simple box-dark bg-green same-height bg-green"
-                                             style="background: #00a157">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                        <div class="box-simple box-dark bg-green same-height"
+                                            >
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             <h5>Seu pedido saiu para a entrega.</h5>
                                         </div>
                                     {% else %}
                                         <div class="box-simple box-dark same-height">
-                                            <h4 style="color: white;">{{ pedido_obj.status_pedido }}</h4>
+                                            <h4>{{ pedido_obj.status_pedido }}</h4>
                                             {% if not pedido_obj.estabelecimento.avaliacao_set.all|ja_avaliou:pedido_obj.cliente %}
                                                 <p><a href="{% url 'add_avaliacao' pedido_obj.pk %}"
                                                       class="btn btn-primary btn-block btn-lg">AVALIAR PEDIDO</a>
