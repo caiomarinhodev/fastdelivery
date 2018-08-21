@@ -47,7 +47,10 @@
                                                                 <div class="product-list-img">
                                                                     <div class="pli-one">
                                                                         <div class="pli-two">
-                                                                            <a href="{% url 'view_product_app' produto.id %}">
+                                                                            <a href="{% url 'view_product_app' produto.id %}"
+                                                                               class="tool" data-toggle="tooltip"
+                                                                               title="{{ produto.nome }}"
+                                                                               data-tooltip="{{ produto.nome }}">
                                                                                 <img title="{{ produto.nome }}"
                                                                                      alt="{{ produto.nome }}"
                                                                                      src="{{ produto.fotoproduto_set.first }}">
@@ -55,9 +58,10 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <h5>
-                                                                    {{ produto.nome|truncatechars:"17" }}
-                                                                </h5>
+{#                                                                <h5>#}
+{#                                                                    <a href="#"#}
+{#                                                                       data-position="bottom">{{ produto.nome }}</a>#}
+{#                                                                </h5>#}
                                                                 <div class="price">
                                                                     R$ {{ produto.preco_base|floatformat:2 }}
                                                                     {#                                                                    <span></span>#}
