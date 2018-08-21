@@ -1,0 +1,26 @@
+<header id="header">
+    <div class="nav-wrapper container">
+        <div class="header-logo">
+            <a href="{% url 'home_app' %}" class="nav-logo"><i class="fab fa-envira"></i> Focus Delivery</a>
+        </div>
+        {% if user.cliente %}
+{#            <div class="header-menu-button">#}
+{#                <a href="#" data-activates="nav-mobile-category" class="button-collapse" id="button-collapse-category">#}
+{#                    <div class="cst-btn-menu">#}
+{#                        <i class="fas fa-align-right"></i>#}
+{#                    </div>#}
+{#                </a>#}
+{#            </div>#}
+            <div class="header-icon-menu">
+                <a href="#" data-activates="nav-mobile-account" class="button-collapse" id="button-collapse-account"><i
+                        class="far fa-user-circle"></i></a>
+            </div>
+            <div class="header-icon-menu cart-item-wrap">
+                <a href="{% url 'cart_app' %}">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</header>

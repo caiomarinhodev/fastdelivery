@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Focus Delivery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="HandheldFriendly" content="True">
+    <link rel="icon" href="{% static 'img/log_black.png' %}" type="image/x-icon">
+    <!-- CSS  -->
+    <link rel="stylesheet"
+          href="{% static 'gromart/node_modules/font-awesome/web-fonts-with-css/css/fontawesome-all.css' %}">
+    <link rel="stylesheet" href="{% static 'gromart/css/materialize.min.css' %}">
+    <link rel="stylesheet" href="https://materializecss.com/css/ghpages-materialize.css">
+    <link rel="stylesheet" href="{% static 'gromart/css/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'gromart/css/style.css' %}">
+    <!-- materialize icon -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Owl carousel -->
+    <link rel="stylesheet" href="{% static 'gromart/node_modules/owl.carousel/dist/assets/owl.carousel.min.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'gromart/node_modules/owl.carousel/dist/assets/owl.theme.default.min.css' %}">
+    <!-- Slick CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'gromart/node_modules/slick-carousel/slick/slick.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'gromart/node_modules/slick-carousel/slick/slick-theme.css' %}">
+    <!-- Magnific Popup core CSS file -->
+    <link rel="stylesheet" href="{% static 'gromart/node_modules/magnific-popup/dist/magnific-popup.css' %}">
+    <link href="{% static 'css/sweetalert.min.css' %}" rel="stylesheet">
+</head>
+<body id="homepage">
+<!-- BEGIN PRELOADING -->
+<div class="preloading">
+    <div class="wrap-preload">
+        <div class="cssload-loader"></div>
+    </div>
+</div>
+<!-- END PRELOADING -->
+<!-- HEADER -->
+{% include 't_app/includes/header.html' %}
+<!-- END HEADER -->
+<!-- SIDE NAV-->
+{% include 't_app/includes/nav.html' %}
+<!-- END SIDENAV-->
+
+<!-- PAGE CONTENT -->
+<div id="page-content">
+    {% block content %}
+
+    {% endblock %}
+</div>
+<!-- END PAGE CONTENT -->
+
+<!-- FOOTER  -->
+{% include 't_app/includes/footer.html' %}
+<!-- END FOOTER -->
+<!-- Script -->
+<script src="{% static 'gromart/js/jquery.min.js' %}"></script>
+<script src="{% static 'gromart/js/materialize.min.js' %}"></script>
+<!-- Owl carousel -->
+<script src="{% static 'gromart/node_modules/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+<!-- Magnific Popup core JS file -->
+<script src="{% static 'gromart/node_modules/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+<!-- Slick JS -->
+<script src="{% static 'gromart/node_modules/slick-carousel/slick/slick.min.js' %}"></script>
+<!-- Custom script -->
+<script src="{% static 'gromart/js/custom.js' %}"></script>
+<script src="{% static 'js/sweetalert.min.js' %}"></script>
+<script src="{% static 'js/jquery.1.11.0.min.js' %}"></script>
+{#<script>#}
+{#    $(document).ready(function(){#}
+{#       $('select').form#}
+{#    });#}
+{#</script>#}
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.tags == 'error' %}
+            <script>
+                $(document).ready(function () {
+                    swal("Ops...", "{{ message|safe }}", "error")
+                });
+            </script>
+        {% else %}
+            <script>
+                $(document).ready(function () {
+                    swal("Sucesso", "{{ message|safe }}", "success")
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

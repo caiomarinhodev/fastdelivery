@@ -1,0 +1,163 @@
+{% extends 't_app/base.html' %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="wishlist-page">
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <div class="section-title">
+                        <span class="theme-secondary-color">Wish</span> list
+                    </div>
+                </div>
+            </div>
+            <div class="box-wish-list">
+                <!-- item -->
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url(img/cabbage_PNG8821.jpg);">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">Cabbage</div>
+                                    <div class="win-price">$ 6.00</div>
+                                    <div class="win-info">fresh cabbage</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="#"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item -->
+                <!-- item -->
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url(img/corn_PNG5284.jpg);">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">Corn</div>
+                                    <div class="win-price">$ 7.00</div>
+                                    <div class="win-info">corn product</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="#"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item -->
+                <!-- item -->
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url(img/pineapple_PNG2759.jpg);">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">Pineapple</div>
+                                    <div class="win-price">$ 5.00</div>
+                                    <div class="win-info">fruit pineapple</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="#"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item -->
+                <!-- item -->
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url(img/blackberry_PNG46.jpg);">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">Blackberry</div>
+                                    <div class="win-price">$ 5.00</div>
+                                    <div class="win-info">fresh blackberry</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="#"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item -->
+                <!-- item -->
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url(img/potato_PNG7093.jpg);">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">Potato</div>
+                                    <div class="win-price">$ 4.00</div>
+                                    <div class="win-info">fresh Potato</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="#"><i class="far fa-times-circle"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end item --></div>
+        </div>
+        <!-- PAGINATION -->
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <ul class="pagination">
+                        <li class="disabled">
+                            <a href="#!"><i class="material-icons">chevron_left</i></a>
+                        </li>
+                        <li class="active">
+                            <a href="#!">1</a>
+                        </li>
+                        <li class="waves-effect">
+                            <a href="#!">2</a>
+                        </li>
+                        <li class="waves-effect">
+                            <a href="#!">3</a>
+                        </li>
+                        <li class="waves-effect">
+                            <a href="#!">4</a>
+                        </li>
+                        <li class="waves-effect">
+                            <a href="#!">5</a>
+                        </li>
+                        <li class="waves-effect">
+                            <a href="#!"><i class="material-icons">chevron_right</i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGINATION --></div>
+{% endblock %}
