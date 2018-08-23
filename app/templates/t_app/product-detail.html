@@ -23,18 +23,8 @@
                     <div class="name-price">
                         <div class="pg-product-name">{{ produto.nome }}</div>
                         <div class="pg-product-price"> R$ {{ produto.preco_base|floatformat:2 }}</div>
+                        <div class="pg-product-name">{{ produto.descricao }}</div>
                         <div style="clear:both;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-reveal">
-            <div class="desciption-product">
-                <div class="container">
-                    <div class="row">
-                        <div class="col s12">
-                            {{ produto.descricao }}
-                        </div>
                     </div>
                 </div>
             </div>
@@ -52,7 +42,8 @@
                         {% if produto.grupo_set.first %}
                             <a href="{% url 'choose_grupos_app' produto.id %}" class="btn button-add-cart">COMPRAR</a>
                         {% else %}
-                            <a href="{% url 'add_cart_app' produto.categoria.estabelecimento.id %}" class="btn button-add-cart">COMPRAR</a>
+                            <a href="{% url 'add_cart_app' produto.categoria.estabelecimento.id %}"
+                               class="btn button-add-cart">COMPRAR</a>
                         {% endif %}
 
                     </div>
