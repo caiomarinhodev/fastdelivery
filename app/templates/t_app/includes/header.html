@@ -1,7 +1,11 @@
+{% load static %}
 <header id="header">
     <div class="nav-wrapper container">
         <div class="header-logo">
-            <a href="{% url 'home_app' %}" class="nav-logo"><i class="fab fa-envira"></i> Focus Delivery</a>
+            <a href="{% url 'home_app' %}" class="nav-logo" style="padding: 0 0 0 0; font-size: 24px;margin: 0 0 0 -10px;">
+                <i><img src="{% static 'img/focus.png' %}" class="img-responsive" style="max-height: 20px;"/></i>
+                Focus Delivery
+            </a>
         </div>
         {% if user.cliente %}
 {#            <div class="header-menu-button">#}

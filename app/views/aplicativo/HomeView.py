@@ -94,5 +94,5 @@ class ChooseGroupListView(LoginRequiredMixin, LojaFocusMixin, ListView):
         Paginate the queryset, if needed.
         """
         pk = self.kwargs['pk']
-        queryset = Produto.objects.get(id=pk).grupo_set.all()
+        queryset = Produto.objects.get(id=pk).grupo_set.order_by('created_at').filter(disponivel=True)
         return queryset
