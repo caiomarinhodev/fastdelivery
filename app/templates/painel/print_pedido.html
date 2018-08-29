@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load filters %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" moznomarginboxes mozdisallowselectionprint>
 <head>
     <meta charset="UTF-8">
     <title>Focus Delivery</title>
@@ -9,10 +9,9 @@
     <link rel="stylesheet" href='{% static 'bootstrap/css/bootstrap.min.css' %}'>
     <!-- Bootstrap 3.3.5 -->
     <script src='{% static 'bootstrap/js/bootstrap.min.js' %}'></script>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet">
 </head>
-<body onload="window.print();" style="width: 150px;">
+<body onload="window.print();" style="width: 150px; margin-left: 10px;">
 <style>
 
     .table-responsive > .table > tbody > tr > td,
@@ -30,6 +29,11 @@
     tr,
     p, li {
         font-size: 11px !important;
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    th, td, tr, p, li, h1, h2, h3, h4, h5, h6, address, span, label, strong, br {
+        font-family: 'Share Tech Mono', monospace;
     }
 
 </style>
@@ -70,7 +74,7 @@
 
             <!-- Table row -->
             <div class="row">
-                <div class="col-xs-12 table-responsive">
+                <div class="col-xs-12">
                     {{ pedido.itens|safe }}
                 </div>
                 <hr/>
@@ -128,12 +132,12 @@
 
             <!-- Table row -->
             <div class="row">
-                <div class="col-xs-12 table-responsive">
+                <div class="col-xs-12 ">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>Produto</th>
-                            <th>Desc</th>
+                            <th>Descricao</th>
                             <th>Preço</th>
                         </tr>
                         </thead>
