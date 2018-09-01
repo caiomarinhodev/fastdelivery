@@ -43,6 +43,8 @@
                                                 <a href="{% url 'view_product_app' produto.id %}">
                                                     <div class="col s6 m4 l3 col-produc">
                                                         <div class="box-product">
+                                                            <span style="color: red;font-size: 10px;
+                                                                            ">{{ produto.nome|truncatechars:'15' }}</span>
                                                             <div class="bp-top">
                                                                 <div class="product-list-img">
                                                                     <div class="pli-one">
@@ -58,10 +60,10 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-{#                                                                <h5>#}
-{#                                                                    <a href="#"#}
-{#                                                                       data-position="bottom">{{ produto.nome }}</a>#}
-{#                                                                </h5>#}
+                                                                {#                                                                <h5>#}
+                                                                {#                                                                    <a href="#"#}
+                                                                {#                                                                       data-position="bottom">{{ produto.nome }}</a>#}
+                                                                {#                                                                </h5>#}
                                                                 <div class="price">
                                                                     R$ {{ produto.preco_base|floatformat:2 }}
                                                                     {#                                                                    <span></span>#}
