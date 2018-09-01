@@ -22,6 +22,7 @@
                             <a href="{% url 'view_loja_app' loja.id %}">
                                 <div class="col s6 m4 l3 col-produc">
                                     <div class="box-product">
+                                        <span style="color: green;">ONLINE</span>
                                         <div class="bp-top">
                                             <div class="product-list-img">
                                                 <div class="pli-one">
@@ -30,6 +31,7 @@
                                                            class="tool" data-toggle="tooltip"
                                                            title="{{ loja.user.first_name }}"
                                                            data-tooltip="{{ loja.user.first_name }}">
+
                                                             <img title="{{ loja.user.first_name }}"
                                                                  alt="{{ loja.user.first_name }}"
                                                                  src="{{ loja.photo }}">
@@ -46,8 +48,8 @@
                                         <div class="bp-bottom">
                                             <a href="{% url 'view_loja_app' loja.id %}"
                                                class="btn button-add-cart tool" data-toggle="tooltip"
-                                                           title="{{ loja.user.first_name }}"
-                                                           data-tooltip="{{ loja.user.first_name }}">Ver Loja</a>
+                                               title="{{ loja.user.first_name }}"
+                                               data-tooltip="{{ loja.user.first_name }}">Ver Loja</a>
                                         </div>
                                     </div>
                                 </div>
@@ -63,12 +65,14 @@
                                     <div class="box-product" style="opacity: 0.5; pointer-events: none;">
                                         <div class="bp-top">
                                             <div class="product-list-img">
+                                                <span style="color: red;">OFFLINE</span>
                                                 <div class="pli-one">
                                                     <div class="pli-two">
                                                         <a href="{% url 'view_loja_app' loja.id %}"
                                                            class="tool" data-toggle="tooltip"
                                                            title="{{ loja.user.first_name }}"
                                                            data-tooltip="{{ loja.user.first_name }}">
+
                                                             <img title="{{ loja.user.first_name }}"
                                                                  alt="{{ loja.user.first_name }}"
                                                                  src="{{ loja.photo }}">
