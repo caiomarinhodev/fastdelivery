@@ -31,9 +31,9 @@
     <!-- Magnific Popup core CSS file -->
     <link rel="stylesheet" href="{% static 'gromart/node_modules/magnific-popup/dist/magnific-popup.css' %}">
     <link href="{% static 'css/sweetalert.min.css' %}" rel="stylesheet">
-{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
-{#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+    {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>#}
+    {#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
 </head>
 <body id="homepage">
 <!-- BEGIN PRELOADING -->
@@ -74,6 +74,15 @@
 <script>
     $(document).ready(function () {
         $('.tool').tooltip('duration', 5);
+        $('a').click(function () {
+            $('.preloading').show();
+        });
+        $('a[href*="#"]').click(function () {
+            $('.preloading').hide();
+        });
+        $('button').click(function () {
+            $('.preloading').show();
+        });
     });
 </script>
 

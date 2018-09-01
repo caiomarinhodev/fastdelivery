@@ -113,7 +113,7 @@
                                                     location.href = "?page={{ page_obj.next_page_number }}" + add;
                                                 {% else %}
                                                     // ver proximo passo apos ultimo escolha.
-                                                    location.href = "{% url 'add_cart_app' grupos.0.produto.categoria.estabelecimento.id %}" +"?"+ add;
+                                                    location.href = "{% url 'add_cart_app' grupos.0.produto.categoria.estabelecimento.id %}" + "?" + add;
                                                 {% endif %}
 
                                             }
@@ -135,7 +135,7 @@
                     <div class="row">
                         <div class="col s12">
                             <ul class="pagination">
-                                <li>
+                                <li class="active">
                                     {% if not page_obj.has_previous %}
                                         <a href="{% url 'view_loja_app' grupos.0.produto.categoria.estabelecimento.id %}"><i
                                                 class="material-icons">chevron_left</i></a>
@@ -148,7 +148,7 @@
                                 <li>
                                     Página {{ page_obj.number }} de {{ paginator.num_pages }}.
                                 </li>
-                                <li>
+                                <li class="active">
                                     {% if not page_obj.has_next %}
                                         <a href="#" onclick="sub();"><i
                                                 class="material-icons">chevron_right</i></a>
