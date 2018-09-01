@@ -22,6 +22,7 @@
             <div class="header-icon-menu cart-item-wrap">
                 <a href="{% url 'cart_app' %}">
                     <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-item">{{ pedido_obj.itempedido_set.all|length }}</span>
                 </a>
             </div>
         {% endif %}
