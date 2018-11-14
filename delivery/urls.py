@@ -3,12 +3,12 @@ from django.conf.urls import url, include
 from django.urls import reverse
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from rest_framework import routers
+# from rest_framework import routers
 
 
-from api import views as views_api
-from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedidoViewSet, \
-    OpcionalChoiceViewSet, EnderecoViewSet, RequestViewSet, ListMyRequests, ClienteViewSet, ListMyAddress
+# from api import views as views_api
+# from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedidoViewSet, \
+#     OpcionalChoiceViewSet, EnderecoViewSet, RequestViewSet, ListMyRequests, ClienteViewSet, ListMyAddress
 from app.views.AcompanharView import AcompanharListView, AcompanharDetailView, LojasMotoristaListView
 from app.views.ChatView import ListChatView, get_chat, ChatPedidoView, submit_message, ChatMotoristaPedidoView
 from app.views.ClientesView import *
@@ -98,21 +98,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet, base_name='users')
-router.register(r'districts', BairroViewSet, base_name='districts')
-router.register(r'configurations', ConfigurationViewSet, base_name='configurations')
-router.register(r'requests', RequestViewSet, base_name='requests')
-router.register(r'items', ItemPedidoViewSet, base_name='items')
-router.register(r'optionals', OpcionalChoiceViewSet, base_name='optionals')
-router.register(r'addresses', EnderecoViewSet, base_name='addresses')
-router.register(r'clients', ClienteViewSet, base_name='clients')
+# router = routers.DefaultRouter()
+# router.register(r'users', UserViewSet, base_name='users')
+# router.register(r'districts', BairroViewSet, base_name='districts')
+# router.register(r'configurations', ConfigurationViewSet, base_name='configurations')
+# router.register(r'requests', RequestViewSet, base_name='requests')
+# router.register(r'items', ItemPedidoViewSet, base_name='items')
+# router.register(r'optionals', OpcionalChoiceViewSet, base_name='optionals')
+# router.register(r'addresses', EnderecoViewSet, base_name='addresses')
+# router.register(r'clients', ClienteViewSet, base_name='clients')
 
-url_api = [
-    url(r'^stores/$', views_api.EstabelecimentoList.as_view()),
-    url(r'my-requests/$', ListMyRequests.as_view()),
-    url(r'my-addresses/$', ListMyAddress.as_view()),
-]
+# url_api = [
+    # url(r'^stores/$', views_api.EstabelecimentoList.as_view()),
+    # url(r'my-requests/$', ListMyRequests.as_view()),
+    # url(r'my-addresses/$', ListMyAddress.as_view()),
+# ]
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -344,6 +344,6 @@ urlpatterns = [
     url(r'^aplicativo/meuspedidos/$', MeusRequestsApp.as_view(), name='meus_pedidos_app'),
 ]
 
-urlpatterns += router.urls
+# urlpatterns += router.urls
 
-urlpatterns += url_api
+# urlpatterns += url_api

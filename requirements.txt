@@ -23,6 +23,5 @@ pyfcm
 pytz
 pycpfcnpj
 django-progressive-web-app
-djangorestframework
 markdown
 django-filter
