@@ -82,7 +82,7 @@
             play('alert');
             swal("Mensagem!", "O Motorista lhe enviou uma mensagem, va para o CHAT.", "warning");
         {% elif notificacao.type_message == 'ENABLE_ROTA' %}
-            play('alert');
+{#            play('alert');#}
             swal({
                 title: "Rota gerada!",
                 text: '{{ notificacao.message }}',

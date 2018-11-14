@@ -4,6 +4,74 @@
 {% load filters %}
 {% block content %}
     <div class="row">
+        <div class="col-md-4 col-xs-12">
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>R$ {{ vendas_totais|get_valor_vendas|floatformat:2 }}</h3>
+
+                    <p>Vendas Totais (subtotal)</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-area-chart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <!-- small box -->
+            <div class="small-box bg-purple">
+                <div class="inner">
+                    <h3>R$ {{ vendas_mes|get_valor_vendas|floatformat:2 }}</h3>
+
+                    <p>Vendas do Mês (subtotal)</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-pie-chart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>R$ {{ vendas_mes|get_ticket_medio|floatformat:2 }}</h3>
+
+                    <p>Ticket Medio (Mês)</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div class="small-box bg-blue">
+                <div class="inner">
+                    <h3>{{ vendas_totais|length }}</h3>
+
+                    <p>Compras Totais</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-bar-chart"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-maroon">
+                <div class="inner">
+                    <h3>{{ vendas_mes|length }}</h3>
+
+                    <p>Compras no Mês</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-line-chart"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12">
             {% include 'entrega/reports/graph_orders_seven.html' %}
         </div>

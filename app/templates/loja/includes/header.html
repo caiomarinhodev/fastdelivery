@@ -3,41 +3,55 @@
     <div id="top">
         <div class="container">
             <div class="row">
-{#                <div class="col-xs-4 contact">#}
-{#                    <p class="hidden-sm hidden-xs"></p>#}
-{##}
-{#                    <p class="hidden-md hidden-lg">#}
-{#                        <a href="#" data-animate-hover="pulse"><i#}
-{#                            class="fa fa-phone"></i></a> <a href="#" data-animate-hover="pulse"><i#}
-{#                            class="fa fa-envelope"></i></a>#}
-{#                    </p>#}
-{#                </div>#}
-                <div class="col-xs-10">
-{#                    <div class="social">#}
-{#                        <a href="#" class="external facebook" data-animate-hover="pulse"><i#}
-{#                                class="fa fa-facebook"></i></a>#}
-{#                        <a href="#" class="external gplus" data-animate-hover="pulse"><i#}
-{#                                class="fa fa-google-plus"></i></a>#}
-{#                        <a href="#" class="external twitter" data-animate-hover="pulse"><i#}
-{#                                class="fa fa-twitter"></i></a>#}
-{#                    </div>#}
+                {#                <div class="col-xs-4 contact">#}
+                {#                    <p class="hidden-sm hidden-xs"></p>#}
+                {##}
+                {#                    <p class="hidden-md hidden-lg">#}
+                {#                        <a href="#" data-animate-hover="pulse"><i#}
+                {#                            class="fa fa-phone"></i></a> <a href="#" data-animate-hover="pulse"><i#}
+                {#                            class="fa fa-envelope"></i></a>#}
+                {#                    </p>#}
+                {#                </div>#}
+                <div class="col-xs-12">
+                    {#                    <div class="social">#}
+                    {#                        <a href="#" class="external facebook" data-animate-hover="pulse"><i#}
+                    {#                                class="fa fa-facebook"></i></a>#}
+                    {#                        <a href="#" class="external gplus" data-animate-hover="pulse"><i#}
+                    {#                                class="fa fa-google-plus"></i></a>#}
+                    {#                        <a href="#" class="external twitter" data-animate-hover="pulse"><i#}
+                    {#                                class="fa fa-twitter"></i></a>#}
+                    {#                    </div>#}
 
-                    <div class="login" style="padding-right: 100px;">
-                        {% if user.is_authenticated %}
-                            {% if user.cliente %}
-                            {% else %}
-                                <a href="{% url 'dashboard' %}" style=""><i class="fa fa-sign-in"></i>
-                                    <span class="text-uppercase">Painel</span></a>
-                            {% endif %}
-
-                            <a href="{% url "auth_logout" %}" style=""><i class="fa fa-sign-in"></i>
-                                <span class="text-uppercase">Log out</span></a>
+                    {% if user.is_authenticated %}
+                        {% if user.cliente %}
                         {% else %}
-                            <a href="{% url "choose_login" %}" style=""><i class="fa fa-sign-in"></i>
-                                <span class="text-uppercase">Log in ou Registro</span></a> &nbsp;&nbsp;
-                            &nbsp;&nbsp;&nbsp;
+                            <a href="{% url 'dashboard' %}" style=""><i class="fa fa-sign-in"></i>
+                                <span class="text-uppercase">Painel</span></a>
                         {% endif %}
-                    </div>
+                        <div class="row text-center">
+                            <div class="col-md-8 col-md-offset-2 ">
+
+                                    <a href="{% url 'meu-carrinho' %}" class="btn btn-danger">
+                                        <i class="fa fa-shopping-cart"></i>Carrinho</a>
+{#                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger#}
+{#                                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+{#                                                disabled#}
+{#                                                {% endif %}#}
+{#                                                "#}
+{#                                            {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+{#                                       disabled="disabled"#}
+{#                                            {% endif %}#}
+{#                                    >Finalizar Compra</a>#}
+
+                            </div>
+                        </div>
+
+
+                    {% else %}
+                        <a href="{% url "choose_login" %}" style=""><i class="fa fa-sign-in"></i>
+                            <span class="text-uppercase">Log in ou Registro</span></a> &nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
+                    {% endif %}
 
                 </div>
             </div>
@@ -82,12 +96,12 @@ _________________________________________________________ -->
                         {#                            <li id="menu_instituicoes" class="">#}
                         {#                                <a id="instituicoes_link" href="{% url 'menu_institutes' %}">Instituições</a>#}
                         {#                            </li>#}
-{#                        <li id="menu_contribua" class="">#}
-{#                            <a id="contribua_link" href="#">Sobre Nós</a>#}
-{#                        </li>#}
-{#                        <li id="menu_arrecade" class="">#}
-{#                            <a id="arrecade_link" href="#">Aplicativo</a>#}
-{#                        </li>#}
+                        <li id="about" class="">
+                            <a id="about_link" href="{% url 'about' %}">Sobre Nós</a>
+                        </li>
+                        {#                        <li id="menu_arrecade" class="">#}
+                        {#                            <a id="arrecade_link" href="#">Aplicativo</a>#}
+                        {#                        </li>#}
                         <li class="dropdown">
                             <a id="inscrevase_link" class="dropdown-toggle"
                                data-toggle="dropdown">Registre-se<b

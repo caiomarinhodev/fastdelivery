@@ -13,7 +13,7 @@ class AcompanharListView(LoginRequiredMixin, ListView, CustomContextMixin):
     template_name = 'entrega/acompanhar/list_acompanhar_loja.html'
 
     def get_queryset(self):
-        return Pedido.objects.filter(estabelecimento__user=self.request.user, status=False).order_by('-created_at')
+        return Pedido.objects.filter(estabelecimento__user=self.request.user, status=False, btn_finalizado=False).order_by('-created_at')
 
 
 class AcompanharDetailView(LoginRequiredMixin, DetailView, CustomContextMixin):

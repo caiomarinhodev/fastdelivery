@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, date, time
 
 from django import template
+from django.template.defaultfilters import floatformat
 
 from app.models import Motorista, Estabelecimento, Ponto, ConfigAdmin, BairroGratis, Avaliacao
 from app.views.geocoding import calculate_matrix_distance
@@ -171,6 +172,36 @@ def corridas_hoje(motorista):
 
 
 @register.filter
+def make_obs(ponto):
+    pedido = ponto.pedido
+    req = None
+    for request in pedido.request_set.all():
+        from app.views.painel.pedido.PedidoView import make_itens
+        if request.cliente.telefone == ponto.telefone and make_itens(request) == ponto.itens:
+            req = request
+    if req is None:
+        return ponto.observacoes
+    try:
+        message = '<p><ul>'
+        try:
+
+            if 'valor_total' in req and req.valor_total:
+                message += '<li>Valor Total: ' + floatformat(str(req.valor_total), 2) + ' </li>'
+            if 'troco' in req and req.troco:
+                message += '<li>Troco para: ' + req.troco + '</li>'
+            message += '<li>Forma de Pagamento: ' + str(req.forma_pagamento) + ' </li>'
+            message += '</ul></p>'
+        except (Exception,):
+            message += '<li>Forma de Pagamento: ' + unicode(req.forma_pagamento) + ' </li>'
+            message += '<li>Valor Total: ' + floatformat(unicode(req.valor_total), 2) + ' </li>'
+            message += '<li>Troco para: ' + unicode(req.troco) + '</li>'
+            message += '</ul></p>'
+        return message
+    except (Exception,):
+        return ""
+
+
+@register.filter
 def ganhos_mes(motorista):
     try:
         now = datetime.now()
@@ -212,6 +243,14 @@ def rotas_promo(motorista):
 
 
 @register.filter
+def options_motoboys_fixos(motoristas):
+    try:
+        return motoristas.filter(ocupado=False)
+    except (Exception):
+        return None
+
+
+@register.filter
 def ganhos_hoje(motorista):
     try:
         now = datetime.now()
@@ -222,6 +261,28 @@ def ganhos_hoje(motorista):
             ganho_hoje = float(ganho_hoje) + float(pedido.valor_total)
         return ganho_hoje
     except (Motorista.DoesNotExist, Exception):
+        return 0.0
+
+
+@register.filter
+def get_valor_vendas(requests):
+    try:
+        ganho = 0.0
+        for req in requests:
+            ganho = float(req.subtotal) + float(ganho)
+        return ganho
+    except (Exception,):
+        return 0.0
+
+
+@register.filter
+def get_ticket_medio(requests):
+    try:
+        ganho = 0.0
+        for req in requests:
+            ganho = float(req.subtotal) + float(ganho)
+        return float(ganho / float(len(requests)))
+    except (Exception,):
         return 0.0
 
 
@@ -565,3 +626,18 @@ def lojas_online(user):
         return len(Estabelecimento.objects.filter(is_online=True))
     except (ValueError, ZeroDivisionError, Exception):
         return 0
+
+
+@register.filter
+def has_motoboy(lista, user):
+    try:
+        value = False
+        for mt in lista:
+            print(mt.user.id)
+            print(user.id)
+            print(mt.user.id == user.id)
+            if mt.user.id == user.id:
+                value = True
+        return value
+    except (ValueError, ZeroDivisionError, Exception):
+        return False

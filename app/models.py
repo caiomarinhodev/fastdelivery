@@ -79,6 +79,7 @@ class Configuration(TimeStamped):
     has_cozinha = models.BooleanField(default=True)
     status_entrega_gratis = models.BooleanField(default=False)
     blocked_cozinha = models.BooleanField(default=False)
+    has_fixos = models.BooleanField(default=False)
 
     def __str__(self):
         return "%s" % self.plano
@@ -141,7 +142,9 @@ class Estabelecimento(TimeStamped, BaseAddress):
     cnpj = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=30, blank=True)
     is_online = models.BooleanField(default=False)
+    description = models.TextField(blank=True, null=True)
     full_address = models.CharField(max_length=300, blank=True, null=True)
+    motoboys = models.ManyToManyField(Motorista, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         try:
@@ -181,7 +184,7 @@ class Pedido(TimeStamped):
     coletado = models.BooleanField(default=False)
     is_complete = models.BooleanField(default=False)
     status_cozinha = models.BooleanField(default=False)
-    valor_total = models.CharField(max_length=300)
+    valor_total = models.TextField()
     btn_finalizado = models.BooleanField(default=False)
     is_draft = models.BooleanField(default=False, )
     motorista = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -327,7 +330,7 @@ class Endereco(TimeStamped, BaseAddress):
 
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     endereco_completo = models.CharField(max_length=300, blank=True, null=True)
-    valor_entrega = models.CharField(max_length=3, blank=True, null=True, default='6')
+    valor_entrega = models.TextField(blank=True, null=True, default='6')
 
     def save(self, *args, **kwargs):
         config = ConfigAdmin.objects.first()
@@ -369,6 +372,7 @@ class Endereco(TimeStamped, BaseAddress):
 class Categoria(TimeStamped):
     estabelecimento = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
+    disponibilidade = models.BooleanField(default=True)
 
     def __unicode__(self):
         return u'%s' % self.nome
@@ -425,7 +429,7 @@ class Opcional(TimeStamped):
     nome = models.CharField(max_length=100)
     descricao = models.CharField(max_length=300, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, blank=True, null=True, on_delete=models.CASCADE)
-    valor = models.CharField(max_length=10)
+    valor = models.TextField()
     disponivel = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -540,8 +544,8 @@ class Request(TimeStamped):
     estabelecimento = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE)
     status_pedido = models.CharField(max_length=100, choices=STATUS, blank=True, null=True, default='AGUARDANDO')
     subtotal = models.CharField(max_length=10, blank=True, null=True)
-    valor_total = models.CharField(max_length=300, blank=True, null=True)
-    troco = models.CharField(max_length=10, blank=True, null=True)
+    valor_total = models.TextField(blank=True, null=True)
+    troco = models.CharField(max_length=300, blank=True, null=True)
     resultado_troco = models.CharField(max_length=10, blank=True, null=True)
     forma_pagamento = models.ForeignKey(FormaPagamento, blank=True, null=True, on_delete=models.CASCADE)
     forma_entrega = models.ForeignKey(FormaEntrega, blank=True, null=True, on_delete=models.CASCADE)
@@ -568,17 +572,13 @@ class Request(TimeStamped):
         subtotal = 0.0
         for item in self.itempedido_set.all():
             subtotal = float(subtotal) + float(str(item.valor_total).replace(',', '.'))
-        self.subtotal = float(subtotal)
+        self.subtotal = float(format(subtotal, '.2f'))
         if self.endereco_entrega:
             if not self.is_entrega_gratis(self.endereco_entrega.bairro, self.estabelecimento):
                 total = float(self.subtotal) + float(str(self.endereco_entrega.valor_entrega).replace(',', '.'))
-                self.valor_total = total
+                self.valor_total = format(total, '.2f')
         else:
-            self.valor_total = subtotal
-        # if self.troco and (str(self.troco).replace(" ", "") != u'' or str(self.troco).replace(" ", "") != ""):
-        #     self.troco = str(self.troco.replace(',', '.').replace(" ", ""))
-        #     self.resultado_troco = float(
-        #         float(self.troco) - float(str(self.valor_total).replace(',', '.')))
+            self.valor_total = format(subtotal, '.2f')
         super(Request, self).save(*args, **kwargs)
 
 
@@ -591,7 +591,7 @@ class ItemPedido(TimeStamped):
     produto = models.ForeignKey(Produto)
     quantidade = models.CharField(max_length=10, blank=True, null=True, default="1")
     observacoes = models.TextField(blank=True, null=True)
-    valor_total = models.CharField(max_length=300, blank=True, null=True)
+    valor_total = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         valor_base = float(str(self.produto.preco_base).replace(',', '.').replace(" ", ""))
@@ -600,7 +600,7 @@ class ItemPedido(TimeStamped):
             for opc in self.opcionalchoice_set.all():
                 valor_opcionais = float(valor_opcionais) + float(str(opc.opcional.valor).replace(',', '.').replace(" ", ""))
         valor_unitario = float(valor_base) + float(valor_opcionais)
-        self.valor_total = float(float(valor_unitario) * float(self.quantidade))
+        self.valor_total = format(float(float(valor_unitario) * float(self.quantidade)), '.2f')
         super(ItemPedido, self).save(*args, **kwargs)
 
     def __unicode__(self):
@@ -671,8 +671,8 @@ class FolhaPagamento(TimeStamped):
         verbose_name = u'Pagamento'
         verbose_name_plural = u'Pagamentos'
 
-    valor_total = models.CharField(max_length=300)
-    valor_cobrar = models.CharField(max_length=50, blank=True, null=True)
+    valor_total = models.TextField()
+    valor_cobrar = models.TextField(blank=True, null=True)
     estabelecimento = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE, blank=True, null=True)
     link_pagamento = models.URLField(blank=True, null=True, default="#")
     status_pagamento = models.BooleanField(default=False)
@@ -680,7 +680,7 @@ class FolhaPagamento(TimeStamped):
     def save(self, *args, **kwargs):
         valor = 0.0
         for it in self.itempagamento_set.all():
-            valor = float(valor) + float(it.request.subtotal)
+            valor = float(valor) + float(it.request.valor_total)
         self.valor_total = valor
         self.valor_cobrar = float(0.07 * valor)
         return super(FolhaPagamento, self).save(*args, **kwargs)
@@ -700,7 +700,7 @@ class PagamentoMotorista(TimeStamped):
         verbose_name = u'Pagamento de Motoboy'
         verbose_name_plural = u'Pagamentos de Motoboys'
 
-    valor_total = models.CharField(max_length=300, default="15.00")
+    valor_total = models.TextField(default="15.00")
     motorista = models.ForeignKey(Motorista, on_delete=models.CASCADE, blank=True, null=True)
     link_pagamento = models.URLField(default="#")
     status_pagamento = models.BooleanField(default=False)

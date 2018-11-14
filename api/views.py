@@ -1,18 +1,23 @@
 # Create your views here.
 from django.contrib.auth.models import User
-from rest_framework import authentication
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import authentication_classes
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
 from api.serializers import UserSerializer, BairroSerializer, ConfigurationSerializer, EstabelecimentoFullSerializer, \
     OpcionalChoiceSerializer, ItemPedidoSerializer, RequestSerializer, EnderecoSerializer, ClienteSerializer
 from app.models import Bairro, Configuration, Estabelecimento, Request, ItemPedido, OpcionalChoice, Endereco, Cliente
+
+
+from rest_framework.permissions import DjangoObjectPermissions
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -130,5 +135,5 @@ class ListMyAddress(APIView):
         Return a list of all users.
         """
         enderecos = [EnderecoSerializer(endereco).data for endereco in
-                    Endereco.objects.filter(cliente__usuario=self.request.user.id)]
+                     Endereco.objects.filter(cliente__usuario=self.request.user.id)]
         return Response(enderecos)

@@ -3,6 +3,18 @@
 {% load filters %}
 <html>
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118256061-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-118256061-1');
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Focus Delivery | Dashboard</title>
@@ -78,7 +90,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="{% url 'home' %}" id="back_logo" class="logo">
+        <a href="#" id="back_logo" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <!--<span>Focus Delivery</span>-->
             <span id="logo_1"><img src='{% static 'img/logo_png.png' %}' class="" style="max-height: 25px; "
@@ -488,7 +500,7 @@
 
                 {% else %}
                     {% if user.estabelecimento.configuration.has_loja_online %}
-                        <li class="treeview" id="loja">
+                        <li class="treeview active" id="loja">
                             <a href="#" id="click">
                                 <i class="fa fa-pie-chart"></i>
                                 <span>Painel Loja</span>
@@ -496,7 +508,7 @@
                               <i class="fa fa-angle-left pull-right"></i>
                             </span>
                             </a>
-                            <ul class="treeview-menu" style="display: none;">
+                            <ul class="treeview-menu">
                                 {# -------------------------------- #}
                                 <li id="dashboard">
                                     <a href="{% url 'dashboard' %}">
@@ -788,7 +800,7 @@
                         console.log(err);
                     }
                 });
-            }, 15000);
+            }, 9000);
 
             window.setInterval(function () {
                 $.ajax({
@@ -804,7 +816,7 @@
                         console.log(err);
                     }
                 });
-            }, 20000);
+            }, 8000);
 
             window.setInterval(function () {
                 $.ajax({
@@ -872,7 +884,7 @@
                         console.log(err);
                     }
                 });
-            }, 8000);
+            }, 5000);
 
             window.setInterval(function () {
                 $.ajax({
@@ -888,7 +900,7 @@
                         console.log(err);
                     }
                 });
-            }, 8000);
+            }, 10000);
 
 
 
@@ -906,7 +918,7 @@
                         console.log(err);
                     }
                 });
-            }, 8000);
+            }, 7000);
 
 
         {% endif %}
@@ -945,7 +957,7 @@
         {% else %}
             <script>
                 $(document).ready(function () {
-                    play('alert');
+{#                    play('alert');#}
                     swal("Sucesso", "{{ message }}", "success")
                 });
             </script>

@@ -63,8 +63,95 @@
         </div>
         <!-- /.col -->
     </div>
+    </hr>
+    <div class="box box-default">
+        <div class="box-header">
+            <h3 class="box-title">Replicar Catalogo:</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <form action="{% url 'copiar_catalogo' %}" method="GET">
+                            <div class="col-md-5">
+                                <label>Origem:</label>
+                                <select class="form-control" name="origem" id="origem">
+                                    {% for estab in lojas %}
+                                        <option value="{{ estab.id }}">{{ estab.user.first_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label>Destino:</label>
+                                <select class="form-control" name="destino" id="destino">
+                                    {% for estabel in lojas %}
+                                        <option value="{{ estabel.id }}">{{ estabel.user.first_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <br/>
+                                <button type="submit" class="btn btn-default btn-flat">Copiar!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <h4 class="box-title">Deletar Catalogo:</h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <form action="{% url 'deletar_catalogo' %}" method="GET">
+                            <div class="col-md-8">
+                                <label>Origem:</label>
+                                <select class="form-control" name="origem" id="origem">
+                                    {% for estab in lojas %}
+                                        <option value="{{ estab.id }}">{{ estab.user.first_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <br/>
+                                <button type="submit" class="btn btn-danger btn-flat">Deletar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </hr>
+    {##}
+    <div class="box box-default">
+        <div class="box-header">
+            <h3 class="box-title">Replicar Grupo:</h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <form action="{% url 'copiar_grupo' %}" method="GET">
+                            <div class="col-md-5">
+                                <label>Grupo Origem:</label>
+                                <input name="grupo" id="grupo" class="form-control" placeholder="IDENTIFICADOR_DO_GRUPO"/>
+                            </div>
+                            <div class="col-md-5">
+                                <label>Produto Destino:</label>
+                                <input name="produto" id="produto" class="form-control" placeholder="ID do Produto"/>
+                            </div>
+                            <div class="col-md-2">
+                                <br/>
+                                <button type="submit" class="btn btn-default btn-flat">Copiar!</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
 
     <div class="row">
         <div class="col-md-12">
@@ -104,7 +191,8 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <button type="button" class="close"
-                                                                        data-dismiss="modal">&times;</button>
+                                                                        data-dismiss="modal">&times;
+                                                                </button>
                                                                 <center><h3>Rota #{{ pedido.id }}</h3></center>
                                                             </div>
                                                             <div class="modal-body">
@@ -123,9 +211,11 @@
                                                                                      class="img-circle">
                                                                             {% endif %}
                                                                             <h3 class="media-heading">
-                                                                                Inicio: {{ pedido.published_at|date:"G:i" }}
+                                                                                Inicio:
+                                                                                {{ pedido.published_at|date:"G:i" }}
                                                                                 <small>
-                                                                                    Criado: {{ pedido.created_at|date:"d/m/Y" }}</small>
+                                                                                    Criado:
+                                                                                    {{ pedido.created_at|date:"d/m/Y" }}</small>
                                                                             </h3>
                                                                             <span><strong>Valor Entrega: R$ {{ pedido.valor_total }}</strong></span>
                                                                             <!--</center>-->
@@ -250,7 +340,8 @@
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <button type="button" class="close"
-                                                                        data-dismiss="modal">&times;</button>
+                                                                        data-dismiss="modal">&times;
+                                                                </button>
                                                                 <center><h3>Sobre {{ pedido.motorista.first_name }}</h3>
                                                                 </center>
                                                             </div>
@@ -282,7 +373,8 @@
                                                                                 </p>
                                                                                 <br>
                                                                                 <p class="text-center">
-                                                                                    <span><strong>Media Avaliacao: {{ pedido.motorista.classification_set.all|soma_avaliacao|floatformat:2 }}</strong></span>
+                                                                                    <span><strong>Media Avaliacao:
+                                                                                        {{ pedido.motorista.classification_set.all|soma_avaliacao|floatformat:2 }}</strong></span>
                                                                                 </p>
                                                                             </center>
                                                                         </div>

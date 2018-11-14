@@ -9,8 +9,10 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <div class="form-group">
                         <h2><i class="fa fa-map-marker"></i> Onde você está?</h2>
-                        <select class="form-control input-lg">
-                            <option value="Campina Grande">Campina Grande</option>
+                        <select class="form-control input-lg"
+                                onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                            <option value="http://focusdelivery.com.br">Campina Grande</option>
+                            <option value="http://guarabira.focusdelivery.com.br">Guarabira</option>
                         </select>
                     </div>
                 </div>
@@ -31,8 +33,8 @@
                         {% for loja in lojas %}
                             {% if loja.configuration.has_loja_online %}
                                 <a href="{% url 'view_loja' loja.pk %}">
-                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2 text-center"
-                                         >
+                                    <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 text-center"
+                                    >
                                         <div class="thumbnail text-center">
 
                                             <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"
@@ -66,7 +68,7 @@
                         {% for loja in lojas_off %}
                             {% if loja.configuration.has_loja_online %}
                                 <a href="{% url 'view_loja' loja.pk %}">
-                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                                    <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
                                         <div class="thumbnail text-center">
 
                                             <img title="{{ loja.user.first_name }}" alt="{{ loja.user.first_name }}"

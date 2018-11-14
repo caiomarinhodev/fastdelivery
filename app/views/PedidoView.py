@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -54,7 +55,62 @@ def set_to_prepared_pedido(request, id_ponto):
         ponto.is_prepared = True
         pedido.save()
         ponto.save()
+        try:
+            logger(request.user, 'setou para preparar o pedido')
+        except:
+            pass
         return HttpResponseRedirect('/app/cozinha/')
+
+def select_motoboy_fixo_painel(request, pk):
+    id_motorista = request.GET['motoboy']
+    print(id_motorista)
+    motorista = Motorista.objects.get(id=id_motorista)
+    pedido = Pedido.objects.get(id=pk)
+    if pedido.motorista:
+        try:
+            messages.error(request,
+                           'O motorista ' + pedido.motorista.first_name + ' pegou esta entrega antes de você')
+        except (Exception,):
+            messages.error(request, 'Outro Motorista pegou esta entrega antes de você')
+        return HttpResponseRedirect('/app/pedidos/motorista/')
+    else:
+        a = func()
+        pedido.status = False
+        pedido.motorista = motorista.user
+        pedido.save()
+        motorista.ocupado = True
+        motorista.save()
+        try:
+            logger(request.user, "Aceitou fazer a Rota #" + str(pedido.pk))
+        except (Exception,):
+            pass
+    return redirect('/app/pedidos/loja')
+
+
+def select_motoboy_fixo_cozinha(request, pk):
+    id_motorista = request.GET['motoboy']
+    print(id_motorista)
+    motorista = Motorista.objects.get(id=id_motorista)
+    pedido = Pedido.objects.get(id=pk)
+    if pedido.motorista:
+        try:
+            messages.error(request,
+                           'O motorista ' + pedido.motorista.first_name + ' pegou esta entrega antes de você')
+        except (Exception,):
+            messages.error(request, 'Outro Motorista pegou esta entrega antes de você')
+        return HttpResponseRedirect('/app/pedidos/motorista/')
+    else:
+        a = func()
+        pedido.status = False
+        pedido.motorista = motorista.user
+        pedido.save()
+        motorista.ocupado = True
+        motorista.save()
+        try:
+            logger(request.user, "Aceitou fazer a Rota #" + str(pedido.pk))
+        except (Exception,):
+            pass
+    return redirect('/app/cozinha')
 
 
 @require_http_methods(["GET"])
@@ -75,6 +131,10 @@ def liberar_corrida_cozinha(request, pk_pedido):
         message = "Voce foi liberado pela loja para realizar a(s) entrega(s). Sua Rota atual esta no menu ENTREGAS. Quando terminar uma entrega, marque finalizar. Qualquer problema, ligue para a loja: " + pedido.estabelecimento.phone
         n = Notification(type_message='ENABLE_ROTA', to=pedido.motorista, message=message)
         n.save()
+    try:
+        logger(request.user, "Liberou a rota pela cozinha. A Rota #" + str(pedido.pk))
+    except (Exception,):
+        pass
     return redirect('/app/cozinha')
 
 
@@ -130,8 +190,26 @@ class PedidosLojaListView(LoginRequiredMixin, ListView, CustomContextMixin):
     context_object_name = 'pedidos'
     template_name = 'entrega/pedidos/list_pedidos_loja.html'
 
-    def get_queryset(self):
-        return Pedido.objects.filter(estabelecimento__user=self.request.user).order_by('-created_at')
+    def get(self, request, *args, **kwargs):
+        now = datetime.now()
+        if 'type' in self.request.GET:
+            if self.request.GET['type'] == 'tudo':
+                self.queryset = Pedido.objects.filter(estabelecimento__user=self.request.user).order_by('-created_at')
+            elif self.request.GET['type'] == 'mes':
+                self.queryset = Pedido.objects.filter(estabelecimento__user=self.request.user,
+                                                      created_at__month=now.month,
+                                                      created_at__year=now.year).order_by('-created_at')
+            else:
+                self.queryset = Pedido.objects.filter(estabelecimento__user=self.request.user,
+                                                      created_at__month=now.month,
+                                                      created_at__year=now.year, created_at__day=now.day).order_by(
+                    '-created_at')
+        else:
+            self.queryset = Pedido.objects.filter(estabelecimento__user=self.request.user,
+                                                  created_at__month=now.month,
+                                                  created_at__year=now.year, created_at__day=now.day).order_by(
+                '-created_at')
+        return super(PedidosLojaListView, self).get(request, *args, **kwargs)
 
 
 class PedidosMotoristaListView(LoginRequiredMixin, RedirectMotoristaOcupadoView, ListView, CustomContextMixin):
@@ -463,6 +541,10 @@ def finalizar_entrega(request, pk_ponto, pk_pedido):
             message = "Motorista " + request.user.first_name + " entregou pedido ao cliente " + ponto.cliente + " no endereco " + ponto.full_address
             n = Notification(type_message='ORDER_DELIVERED', to=pedido.estabelecimento.user, message=message)
             n.save()
+        try:
+            logger(request.user, "Finalizou a Entrega #" + str(ponto.pk))
+        except (Exception,):
+            pass
         return HttpResponseRedirect('/app/pedido/route/' + str(pedido.pk))
     except:
         messages.error(request, 'Este pedido foi deletado pela Loja')
@@ -484,6 +566,10 @@ def finalizar_pedido(request, pk_pedido):
         n.save()
         message = 'Voce concluiu a Rota, se voce estiver com algum material (maquineta ou bag) da Loja ' + pedido.estabelecimento.user.first_name + ',  favor devolver. Obrigado!'
         messages.success(request, message)
+        try:
+            logger(request.user, "Finalizou a Rota #" + str(pedido.pk))
+        except (Exception,):
+            pass
         if motorista.configuration.plano == 'PREMIUM':
             return HttpResponseRedirect('/app/pedidos/motorista/premium/')
         return HttpResponseRedirect('/app/pedidos/motorista/')

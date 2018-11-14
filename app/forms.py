@@ -397,7 +397,7 @@ class FormFormaEntrega(ModelForm, BaseForm):
 class FormRegisterCliente(BaseForm):
     nome = forms.CharField(widget=forms.TextInput(attrs={'required': True,
                                                          'maxlength': 100,
-                                                         'placeholder': 'Nome'}))
+                                                         'placeholder': 'Seu Nome'}))
     sobrenome = forms.CharField(widget=forms.TextInput(attrs={'required': True,
                                                               'maxlength': 100,
                                                               'placeholder': 'Sobrenome'}))
@@ -405,16 +405,28 @@ class FormRegisterCliente(BaseForm):
                                                                  'placeholder': 'Senha'}))
     telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
                                                              'maxlength': 15,
-                                                             'placeholder': 'Numero Telefone'}))
-
-    # cpf = forms.CharField(widget=forms.TextInput(attrs={'required': True,
-    #                                                     'maxlength': 12,
-    #                                                     'placeholder': 'CPF'}))
+                                                             'placeholder': 'Telefone'}))
 
 
 class FormLoginCliente(BaseForm):
     telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
-                                                        'maxlength': 12,
-                                                        'placeholder': 'Numero Telefone'}))
+                                                             'maxlength': 12,
+                                                             'placeholder': 'Telefone'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'required': True,
                                                                  'placeholder': 'Senha'}))
+
+
+class FormClienteRegister(BaseForm):
+    nome = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+                                                         'maxlength': 100, }))
+    sobrenome = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+                                                              'maxlength': 100, }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'required': True, }))
+    telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+                                                             'maxlength': 15, }))
+
+
+class FormClienteLogin(BaseForm):
+    telefone = forms.CharField(widget=forms.TextInput(attrs={'required': True,
+                                                             'maxlength': 12}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'required': True, }))

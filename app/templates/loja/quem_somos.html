@@ -1,0 +1,139 @@
+{% extends 'loja/base.html' %}
+{% load staticfiles %}
+
+{% load filters %}
+
+{% block content %}
+    <style>
+    p, h4{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    </style>
+    <section class="bar background-white no-mb">
+        <div class="container">
+            <div class="row">
+                <div class="heading text-center">
+                    <h2>Sobre a Focus Delivery®</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="row">
+                        <br/>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h4>Olá,<br/>
+                                    Segue um breve informativo sobre a Focus Delivery.</h4>
+                                <p>
+                                    Nosso sistema foi criado com o fim de dar agilidade ao serviço de delivery de
+                                    pequenas,
+                                    médias e grandes empresas. </p>
+
+                                <p> Bem como desonerar e diminuir as obrigações e riscos trabalhistas.</p>
+
+                                <p>Com o Focus Delivery, você tera, hoje, cerca de <b>15-20 motoboys autônomos</b>, online por
+                                    turno,
+                                    totalmente a disposição dos lojistas cadastrados.</p>
+
+                                <p> Alguns benefícios <b>PARA OS LOJISTAS</b> no sistema Focus Delivery:
+
+                                <ul>
+                                    <li> 1 - Maior número de motoboys a disposição;</li>
+
+                                    <li>2 - Maior agilidade e diminuição do tempo de entrega;</li>
+
+                                    <li>3 - Preço justo por corrida;</li>
+
+                                    <li>4 - Isenção de riscos trabalhistas e sobre eventuais acidentes;</li>
+
+                                    <li> 5 - Elimina a necessidade de uso de papéis, impressões e afins;</li>
+
+                                    <li>6 - Cadastro de todos os clientes, para agilizar o preenchimento das
+                                        solicitações;
+                                    </li>
+
+                                    <li> 7 - Emissão de relatórios diversos, que lhe auxiliarão a entender seus
+                                        clientes,
+                                        produtos e
+                                        área de atuação;
+                                    </li>
+
+                                    <li> 8 - Garantia de entrega, seja pelos motoboys cadastrados, seja pelo motoboy
+                                        suporte
+                                        da
+                                        Focus
+                                        Delivery.
+                                    </li>
+
+                                </ul>
+
+                                </p>
+
+                                <p> Recentemente, criamos uma plataforma de vendas, que é totalmente integrada com a
+                                    plataforma
+                                    de entregas. </p>
+
+
+                                <p>Nesta plataforma, o cliente(consumidor final) poderá realizar seu pedido através de
+                                    nosso
+                                    site, que em breve será também App, e receberá seu pedido, também pela Focus
+                                    Delivery. </p>
+
+
+                                <p> Hoje, a Focus Delivery é o único site/App de compras online que além de ser canal de
+                                    vendas,
+                                    também oferece o serviço de entregas automatizado, digital e online.</p>
+
+
+                                <p> Grandes benefícios <b>PARA O CLIENTE(CONSUMIDOR)</b>:
+
+                                <ul>
+
+                                    <li>1 - Maior agilidade em todo processo de compra, preparo e envio do pedido;</li>
+
+                                    <li>2 - Informação mais detalhada do estágio dos pedidos, que são notificados:
+                                        <ul>
+
+                                            <li>2.1 - Na "aceitação do pedido", </li>
+                                            <li>2.2 - No "inicio do preparo na cozinha", </li>
+                                            <li>2.3 - Na liberação de seu pedido para entrega"</li>
+                                            <li>2.4 - O principal, "quem é o motoboy que realizará sua entrega, com
+                                                foto,
+                                                nome, placa da
+                                                moto, qnt de entregas realizadas pelo app e média de avalição do mesmo"
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                </ul>
+
+                                </p>
+                                </p>
+
+                            </div>
+                            <div class="col-md-4">
+
+                                <div class="col-xs-12 text-center img-rounded">
+                                    <img class="img-responsive" src="{% static 'img/test.png' %}" style="height: 300px; width: 550px; border-radius: 25px;"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#about').addClass('active');
+        });
+    </script>
+
+{% endblock %}

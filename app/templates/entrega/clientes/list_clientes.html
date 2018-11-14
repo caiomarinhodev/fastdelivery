@@ -8,7 +8,28 @@
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-header">
-                    <a href="{% url 'add_clientes' %}" class="btn btn-primary">Adicionar Cliente</a>
+                    <a href="{% url 'add_clientes' %}" class="btn btn-primary pull-left">Adicionar Cliente</a>
+                    <form id="form" method="get" action="{% url 'clientes' %}" class="pull-right">
+                        {% csrf_token %}
+                        <div class="">
+                            <label>Filtro:</label>
+                            <select id="type" name="type" class="form-control input-sm" onchange="submitForm();">
+                                <option>-------</option>
+                                <option value="hoje">Hoje</option>
+                                <option value="mes">Mês</option>
+                                <option value="tudo">Tudo</option>
+                            </select>
+                            <script>
+                                function submitForm() {
+                                    $('#loading').show();
+                                    $('#form').submit();
+                                }
+                                $(document).ready(function () {
+
+                                });
+                            </script>
+                        </div>
+                    </form>
                 </div>
                 <!-- form start -->
                 <div class="box-body">

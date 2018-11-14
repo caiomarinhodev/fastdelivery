@@ -4,12 +4,16 @@ import random
 
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic import RedirectView
 
 from app.models import Estabelecimento, Bairro, Configuration, Categoria, Produto, Grupo, Opcional, FotoProduto, \
     FormaEntrega, FormaPagamento
 from app.views.mixins.Mixin import LojaFocusMixin
+
+
+class SobreView(TemplateView, LojaFocusMixin):
+    template_name = 'loja/quem_somos.html'
 
 
 class HomeView(ListView, LojaFocusMixin):
@@ -32,6 +36,10 @@ class LojaProdutosListView(DetailView, LojaFocusMixin):
     model = Estabelecimento
     pk_url_kwarg = 'pk'
 
+    def get(self, request, *args, **kwargs):
+        self.request.session['lojaid'] = self.get_object().pk
+        return super(LojaProdutosListView, self).get(request, *args, **kwargs)
+
 
 class SetOnlineView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -46,7 +54,8 @@ class SetOnlineView(RedirectView):
 
 def bootstrap(request):
     for i in range(0, 15):
-        user = User.objects.create_user(username='loja' + str(i), password='loja' + str(i), first_name='Loja Teste ' + str(i))
+        user = User.objects.create_user(username='loja' + str(i), password='loja' + str(i),
+                                        first_name='Loja Teste ' + str(i))
         confs = Configuration(plano='PREMIUM', tema='skin-black')
         confs.save()
         bairro = Bairro.objects.get(nome='Centenario')

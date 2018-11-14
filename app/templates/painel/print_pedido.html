@@ -1,0 +1,195 @@
+{% load staticfiles %}
+{% load filters %}
+<!DOCTYPE html>
+<html lang="en" moznomarginboxes mozdisallowselectionprint>
+<head>
+    <meta charset="UTF-8">
+    <title>Focus Delivery</title>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href='{% static 'bootstrap/css/bootstrap.min.css' %}'>
+    <!-- Bootstrap 3.3.5 -->
+    <script src='{% static 'bootstrap/js/bootstrap.min.js' %}'></script>
+    <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet">
+</head>
+<body onload="window.print();" style="width: 150px; margin-left: 10px;">
+<style>
+
+    .table-responsive > .table > tbody > tr > td,
+    .table-responsive > .table > tbody > tr > th,
+    .table-responsive > .table > tfoot > tr > td,
+    .table-responsive > .table > tfoot > tr > th,
+    .table-responsive > .table > thead > tr > td,
+    .table-responsive > .table > thead > tr > th {
+        white-space: inherit;
+    }
+
+    address,
+    th,
+    td,
+    tr,
+    p, li {
+        font-size: 11px !important;
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+    th, td, tr, p, li, h1, h2, h3, h4, h5, h6, address, span, label, strong, br {
+        font-family: 'Share Tech Mono', monospace;
+    }
+
+</style>
+<div class="">
+    <!-- Main content -->
+    {% if pedido.full_address %}
+        <section class="">
+            <!-- title row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Focus Delivery
+                    </h4>
+                    <p>Data: {{ pedido.created_at|date:"d/m/Y G:i" }}</p>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                {#                <div class="col-sm-12 invoice-col">#}
+                {#                    <p>#}
+                {#                        <strong>{{ pedido.estabelecimento }}</strong>#}
+                {#                        <br>#}
+                {#                    </p>#}
+                {#                </div>#}
+                {#                <hr>#}
+                <div class="col-sm-12 invoice-col">
+                    <p>
+                        <strong>Cliente:</strong> {{ pedido.cliente }}
+                        <br>
+                        <br> {{ pedido.full_address }}
+                        <br> {{ pedido.bairro }}
+                        <br> Telefone: {{ pedido.telefone }}
+                        <br>
+                    </p>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    {{ pedido.itens|safe }}
+                </div>
+                <hr/>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            ----------------------------
+            <div class="row">
+                <!-- accepted payments column -->
+                <!-- /.col -->
+                <div class="col-xs-12">
+                    {{ pedido.observacoes|safe }}
+                </div>
+                <hr/>
+                <div class="col-xs-12">
+                    {{ pedido|make_obs|safe }}
+                </div>
+                <!-- /.col -->
+            </div>
+            <p>Este documento não é cupom fiscal!</p>
+            <!-- /.row -->
+        </section>
+    {% else %}
+        <section class="">
+            <!-- title row -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Focus Delivery
+                    </h4>
+                    <p>Data: {{ pedido.created_at|date:"d/m/Y G:i" }}</p>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                <div class="col-sm-12 invoice-col">
+                    <p>
+                        <strong>{{ pedido.estabelecimento }}</strong>
+                        <br>
+                    </p>
+                </div>
+                <hr>
+                <div class="col-sm-12 invoice-col">
+                    <p>
+                        <strong>Cliente:</strong> {{ pedido.cliente }}
+                        <br>
+                        <br> {{ pedido.endereco_entrega }}
+                        <br> {{ pedido.endereco_entrega.bairro }}
+                        <br> Telefone: {{ pedido.cliente.telefone }}
+                        <br>
+                    </p>
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-xs-12 ">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Descricao</th>
+                            <th>Preço</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for itempedido in pedido.itempedido_set.all %}
+                            <tr>
+                                <td>{{ itempedido.produto.nome }}</td>
+                                <td>(
+                                    {% for opc in itempedido.opcionalchoice_set.all %}
+                                        {{ opc.opcional.nome }},
+                                    {% empty %}
+                                        -
+                                    {% endfor %}
+                                    )
+                                </td>
+                                <td>{{ itempedido.valor_total|floatformat:2 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <!-- accepted payments column -->
+                <!-- /.col -->
+                <div class="col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th style="width:50%">Total:</th>
+                                <td>{{ pedido.valor_total|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <th>Troco:</th>
+                                <td>
+                                    R$ {{ pedido.troco|floatformat:2 }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <p>Este documento não é cupom fiscal!</p>
+            <!-- /.row -->
+        </section>
+    {% endif %}
+
+    <!-- /.content -->
+</div>
+</body>
+</html>

@@ -41,6 +41,11 @@ class ClienteLoginView(FormView):
     def get_success_url(self):
         session = self.request.session
         try:
+            if 'lojaid' in session:
+                return '/loja/' + str(session['lojaid'])
+        except (Exception,):
+            pass
+        try:
             if 'pedido' in session:
                 req = Request.objects.get(id=session['pedido'])
                 return '/loja/' + str(req.estabelecimento.id)

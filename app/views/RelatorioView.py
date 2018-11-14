@@ -8,7 +8,7 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 
 from app.mixins.CustomContextMixin import CustomContextMixin
-from app.models import Pedido, Motorista
+from app.models import Pedido, Motorista, Request
 
 
 class RelatorioTemplateView(LoginRequiredMixin, TemplateView, CustomContextMixin):
@@ -26,6 +26,13 @@ class DashboardReportViewUser(LoginRequiredMixin, TemplateView, CustomContextMix
 
     def get(self, request, *args, **kwargs):
         kwargs['user'] = User.objects.get(id=self.request.GET['pk'])
+        kwargs['vendas_totais'] = Request.objects.filter(status_pedido='ENTREGUE',
+                                                         estabelecimento__user=kwargs['user'])
+        kwargs['vendas_mes'] = Request.objects.filter(created_at__month=datetime.now().month,
+                                                      created_at__year=datetime.now().year,
+                                                      status_pedido='ENTREGUE',
+                                                      estabelecimento__user=kwargs['user']
+                                                      )
         return super(DashboardReportViewUser, self).get(request, *args, **kwargs)
 
 

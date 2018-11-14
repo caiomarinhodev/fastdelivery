@@ -1,8 +1,10 @@
 """urls.py: Urls definidas."""
 from django.conf.urls import url, include
+from django.urls import reverse
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from rest_framework import routers
+
 
 from api import views as views_api
 from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedidoViewSet, \
@@ -10,7 +12,8 @@ from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedi
 from app.views.AcompanharView import AcompanharListView, AcompanharDetailView, LojasMotoristaListView
 from app.views.ChatView import ListChatView, get_chat, ChatPedidoView, submit_message, ChatMotoristaPedidoView
 from app.views.ClientesView import *
-from app.views.HomeView import DashboardDataView, set_feriado_admin, ListMotoristasView, DashboardListPedidosView
+from app.views.HomeView import DashboardDataView, set_feriado_admin, ListMotoristasView, DashboardListPedidosView, \
+    copy_catalogo, copy_group, delete_catalogo, delete_group
 from app.views.LocationView import get_position_motorista, send_position_motorista
 from app.views.LoginView import LoginView, LogoutView, RegisterView, AppView, EditarPerfilView, RegisterMotoristaView, \
     SetOnlineMotoboyView
@@ -26,12 +29,16 @@ from app.views.PedidoView import PedidosMotoristaListView, \
     RouteMotoristaDetailView, MapRouteMotoristaView, finalizar_entrega, finalizar_pedido, PedidoUpdateView, \
     cancel_pedido, \
     PedidoDetailView, avaliar_motorista, get_pedidos, buscar_cliente, PedidosMotoristaPremiumListView, CozinhaListView, \
-    set_to_prepared_pedido, liberar_corrida_cozinha
+    set_to_prepared_pedido, liberar_corrida_cozinha, select_motoboy_fixo_cozinha, select_motoboy_fixo_painel
 from app.views.RelatorioView import RelatorioTemplateView, DashboardReportViewUser, TimelineView, PromocaoListView
+from app.views.aplicativo.CarrinhoView import CarrinhoAppView, add_cart_app, FinalizaAppRequest, remove_item_app, \
+    AcompanharRequestApp, submit_pedido_app, MeusRequestsApp
+from app.views.aplicativo.HomeView import ListLojas, ListProducts, ProductView, ChooseGroupListView
+from app.views.aplicativo.LoginView import LoginClienteView, LogoutClienteView, RegistroClienteView
 from app.views.loja.AvaliacaoView import AvaliacaoView, add_avaliacao
 from app.views.loja.CarrinhoView import add_cart, FinalizaRequest, AcompanharRequest, submit_pedido, MeusRequests, \
-    remove_cart
-from app.views.loja.HomeView import HomeView, LojaProdutosListView, SetOnlineView, script, bootstrap
+    remove_cart, CarrinhoReqView
+from app.views.loja.HomeView import HomeView, LojaProdutosListView, SetOnlineView, script, bootstrap, SobreView
 from app.views.loja.LoginView import ClienteLoginView
 from app.views.loja.LoginView import EscolheLoginView, RegistroCliente
 from app.views.painel.bairro_gratis.BairroGratisView import BairroGratisCreateView, BairroGratisUpdateView, \
@@ -45,7 +52,7 @@ from app.views.painel.chamado.ChamadoView import ChamadoDeleteView
 from app.views.painel.chamado.ChamadoView import ChamadoListView
 from app.views.painel.chamado.ChamadoView import ChamadoUpdateView
 from app.views.painel.classificacao.ClassificacaoView import ClassificacaoListView
-from app.views.painel.dashboard.DashboardView import DashboardPedidosListView
+from app.views.painel.dashboard.DashboardView import DashboardPedidosListView, PrintView, PrintPontoView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaCreateView, FormaEntregaDeleteView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaListView
 from app.views.painel.forma_entrega.FormaEntregaView import FormaEntregaUpdateView
@@ -220,6 +227,8 @@ urlpatterns = [
     url(r'^loja/login/$', LojaLoginView.as_view(), name='loja_login'),
     url(r'^logout/$', LojaLogoutView.as_view(), name='auth_logout'),
     url(r'^dashboard/$', DashboardPedidosListView.as_view(), name='dashboard'),
+    url(r'^printpedido/(?P<pk>[0-9]+)/$', PrintView.as_view(), name='print_pedido'),
+    url(r'^printponto/(?P<pk>[0-9]+)/$', PrintPontoView.as_view(), name='print_ponto'),
 
     url(r'^categoria/add/$', CategoriaCreateView.as_view(), name='add_categoria'),
     url(r'^categoria/edit/(?P<pk>[0-9]+)/$', CategoriaUpdateView.as_view(), name='edit_categoria'),
@@ -276,6 +285,7 @@ urlpatterns = [
 
     url(r'^add-cart/(?P<id_loja>[0-9]+)/$', add_cart, name='add_cart'),
     url(r'finaliza-pedido/$', FinalizaRequest.as_view(), name='finaliza_pedido'),
+    url(r'carrinho/$', CarrinhoReqView.as_view(), name="meu-carrinho"),
     url(r'acompanhar-pedido/(?P<pk>[0-9]+)/$', AcompanharRequest.as_view(), name='acompanhar_pedido'),
     url(r'submit-pedido/$', submit_pedido, name='submit_pedido'),
     url(r'^notificacao/pedido/$', notificacao_pedido, name="notificacao_pedido"),
@@ -302,7 +312,36 @@ urlpatterns = [
 
     url('', include('pwa.urls')),
 
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    url(r'^sobre/$', SobreView.as_view(), name='about'),
+
+    url(r'^ativar-motoboy/(?P<pk>[0-9]+)/$', select_motoboy_fixo_cozinha, name='ativar_motoboy'),
+
+    url(r'^ativar-motoboy-painel/(?P<pk>[0-9]+)/$', select_motoboy_fixo_painel, name='ativar_motoboy_painel'),
+
+    url(r'^copiar-catalogo/$', copy_catalogo, name='copiar_catalogo'),
+    url(r'^copiar-grupo/$', copy_group, name='copiar_grupo'),
+    url(r'^deletar-catalogo/$', delete_catalogo, name='deletar_catalogo'),
+    url(r'^deletar-grupo/$', delete_group, name='deletar_grupo'),
+
+    # --------------------------------------------------------------------------
+
+    url(r'^aplicativo/$', ListLojas.as_view(), name='home_app'),
+    url(r'^aplicativo/loja/$', ListLojas.as_view(), name='home_app'),
+    url(r'^aplicativo/login/$', LoginClienteView.as_view(), name='login_app'),
+    url(r'^aplicativo/logout/$', LogoutClienteView.as_view(), name='logout_app'),
+    url(r'^aplicativo/registro/$', RegistroClienteView.as_view(), name='registro_app'),
+    url(r'^aplicativo/loja/(?P<pk>[0-9]+)/$', ListProducts.as_view(), name='view_loja_app'),
+    url(r'^aplicativo/produto/(?P<pk>[0-9]+)/$', ProductView.as_view(), name='view_product_app'),
+    url(r'^aplicativo/produto/(?P<pk>[0-9]+)/grupos/$', ChooseGroupListView.as_view(), name='choose_grupos_app'),
+    url(r'^aplicativo/cart/$', CarrinhoAppView.as_view(), name='cart_app'),
+    url(r'^aplicativo/addcart/(?P<id_loja>[0-9]+)/$', add_cart_app, name='add_cart_app'),
+    url(r'^aplicativo/finaliza/$', FinalizaAppRequest.as_view(), name='finaliza_app'),
+    url(r'^aplicativo/removeitem/(?P<pk>[0-9]+)/$', remove_item_app, name='remove_item_app'),
+    url(r'^aplicativo/acompanhar-nota/(?P<pk>[0-9]+)/$', AcompanharRequestApp.as_view(), name='acompanhar_pedido_app'),
+    url(r'^aplicativo/submit/$', submit_pedido_app, name='submit_pedido_app'),
+    url(r'^aplicativo/meuspedidos/$', MeusRequestsApp.as_view(), name='meus_pedidos_app'),
 ]
 
 urlpatterns += router.urls

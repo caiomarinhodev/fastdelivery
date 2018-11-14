@@ -131,6 +131,14 @@ class FinalizaRequest(LoginRequiredMixin, TemplateView, LojaFocusMixin):
         return super(FinalizaRequest, self).get(request, *args, **kwargs)
 
 
+class CarrinhoReqView(LoginRequiredMixin, TemplateView, LojaFocusMixin):
+    template_name = 'loja/carrinho.html'
+    login_url = '/define/login/'
+
+    def get(self, request, *args, **kwargs):
+        return super(CarrinhoReqView, self).get(request, *args, **kwargs)
+
+
 def submit_pedido(request):
     data = request.POST
     endereco = None
@@ -166,16 +174,6 @@ def submit_pedido(request):
         if 'pgto' in data:
             if data['pgto'] != u'':
                 forma_pagamento = FormaPagamento.objects.get(id=data['pgto'])
-                # if forma_pagamento.forma == 'DINHEIRO':
-                    # if 'troco' in data:
-                    #     if data['troco'] != u'':
-                    #         pedido.troco = data['troco']
-                    #     else:
-                    #         messages.error(request, u'Insira o valor do Troco')
-                    #         return redirect('/finaliza-pedido/')
-                    # else:
-                    #     messages.error(request, u'Insira o valor do Troco')
-                    #     return redirect('/finaliza-pedido/')
             else:
                 messages.error(request, u'Insira uma forma de pagamento')
                 return redirect('/finaliza-pedido/')
@@ -185,12 +183,10 @@ def submit_pedido(request):
     except (Exception,):
         messages.error(request, u'Insira uma forma de pagamento')
         return redirect('/finaliza-pedido/')
-    # try:
-    #     if 'troco' in data and forma_pagamento.forma == 'DINHEIRO':
-    #         if data['troco'] != u'':
-    #             pedido.troco = data['troco']
-    # except (Exception,):
-    #     pass
+    try:
+        pedido.troco = data['troco']
+    except (Exception,):
+        pass
     try:
         pedido.forma_pagamento = forma_pagamento
         if endereco:

@@ -1,0 +1,99 @@
+{% extends 't_app/base.html' %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="section product-item">
+        <div class="container">
+            <div class="row row-title">
+                <div class="col s12">
+                    <div class="section-title">
+                        <span class="theme-secondary-color">Loja: </span>{{ loja.user.first_name }}
+                        {% if loja.is_online %}
+                            <span class="stock-item"></span> Online
+                        {% else %}
+                            <span class="stock-item"></span> Offline
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="row row-no-margin">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs z-depth-1">
+                            {% for categoria in loja.categoria_set.all %}
+                                {% if categoria.produto_set.first %}
+                                    {% if categoria.disponibilidade %}
+                                        <li class="tab col s3"><a
+                                                href="#cat-{{ categoria.pk }}">{{ categoria.nome }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <br/><br/><br/>
+                    {% for cat in loja.categoria_set.all %}
+                        {% if cat.produto_set.first %}
+                            {% if cat.disponibilidade %}
+                                <div id="cat-{{ cat.pk }}" class="col s12">
+                                    {% for produto in cat.produto_set.all %}
+                                        {% if produto.disponivel %}
+                                            <div>
+                                                <a href="{% url 'view_product_app' produto.id %}">
+                                                    <div class="col s6 m4 l3 col-produc">
+                                                        <div class="box-product">
+                                                            <span style="color: red;font-size: 10px;margin: 0px 0px 0px 0px;
+                                                            padding: 0px 0px 0px 0px;
+                                                                            ">{{ produto.nome|truncatechars:'21' }}</span>
+                                                            <div class="bp-top">
+                                                                <div class="product-list-img">
+                                                                    <div class="pli-one">
+                                                                        <div class="pli-two">
+                                                                            <a href="{% url 'view_product_app' produto.id %}"
+                                                                               class="tool" data-toggle="tooltip"
+                                                                               title="{{ produto.nome }}"
+                                                                               data-tooltip="{{ produto.nome }}">
+                                                                                <img title="{{ produto.nome }}"
+                                                                                     alt="{{ produto.nome }}"
+                                                                                     src="{{ produto.fotoproduto_set.first }}">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {#                                                                <h5>#}
+                                                                {#                                                                    <a href="#"#}
+                                                                {#                                                                       data-position="bottom">{{ produto.nome }}</a>#}
+                                                                {#                                                                </h5>#}
+                                                                <div class="price">
+                                                                    R$ {{ produto.preco_base|floatformat:2 }}
+                                                                    {#                                                                    <span></span>#}
+                                                                </div>
+                                                                {#                                                                <div class="stock-item">Only available 4 item</div>#}
+                                                            </div>
+                                                            <div class="bp-bottom">
+                                                                <a href="{% url 'view_product_app' produto.id %}"
+                                                                   class="btn button-add-cart"> Comprar</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<script>
+    {#        var instance = M.Tabs.init(el, options);#}
+    $(document).ready(function () {
+        $('.tabs').tabs();
+    });
+</script>

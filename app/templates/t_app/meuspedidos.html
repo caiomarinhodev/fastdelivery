@@ -1,0 +1,46 @@
+{% extends 't_app/base.html' %}
+{% load filters %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="wishlist-page">
+        <div class="container">
+            <div class="row">
+                <div class="col s12">
+                    <div class="section-title">
+                        <span class="theme-secondary-color">Meus </span>Pedidos
+                    </div>
+                </div>
+            </div>
+            <div class="box-wish-list">
+                {% for req in user.cliente.request_set.all|filter_meus_pedidos|order_by %}
+                <div class="row wish-item">
+                    <div class="col s12">
+                        <div class="wish-box">
+                            <div class="wi-img">
+                                <div class="wi-img-product" style="background-image: url({{ req.itempedido_set.first.produto.fotoproduto_set.first }});">
+                                </div>
+                            </div>
+                            <div class="wi-name">
+                                <div class="win-top">
+                                    <div class="win-title">{{ req.estabelecimento }}</div>
+                                    <div class="win-price">R$ {{ req.valor_total }}</div>
+                                    <div class="win-info">{{ req.forma_pagamento }}</div>
+                                </div>
+                            </div>
+                            <div class="wi-remove">
+                                <a href="{% url 'acompanhar_pedido_app' req.id %}"><i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                            <div style="clear: both"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {% endfor %}
+                <!-- item -->
+
+                <!-- end item -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
