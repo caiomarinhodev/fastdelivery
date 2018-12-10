@@ -715,10 +715,16 @@ class BairroGratis(TimeStamped):
     bairro = models.ForeignKey(Bairro, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.bairro.nome)
+        try:
+            return str(self.bairro.nome)
+        except (Exception,):
+            return u'%s' % self.bairro.nome
 
     def __unicode__(self):
-        return str(self.bairro.nome)
+        try:
+            return str(self.bairro.nome)
+        except (Exception,):
+            return u'%s' % self.bairro.nome
 
 
 class Logger(TimeStamped):
