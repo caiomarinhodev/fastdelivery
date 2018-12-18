@@ -307,6 +307,10 @@ class OpcionalAdmin(admin.ModelAdmin):
         return obj.grupo.produto
 
 
+class OperacaoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'tipo', 'valor', 'favorecido', 'created_at', 'published_at')
+
+
 admin.site.register(Avaliacao, AvaliacaoAdmin)
 admin.site.register(ItemPedido, ItemPedidoAdmin)
 admin.site.register(Request, RequestAdmin)
@@ -323,3 +327,7 @@ admin.site.register(Grupo, GrupoAdmin)
 admin.site.register(Endereco, EnderecoAdmin)
 
 admin.site.register(Chamado, ChamadoAdmin)
+
+# admin.site.register(Credito)
+# admin.site.register(Debito)
+admin.site.register(Operacao, OperacaoAdmin)

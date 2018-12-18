@@ -372,3 +372,5 @@ class SetOnlineMotoboyView(RedirectView):
             return '/app/pedidos/motorista'
         else:
             return '/login/'
+
+

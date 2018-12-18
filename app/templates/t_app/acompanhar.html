@@ -14,239 +14,254 @@
                 </div>
             </div>
             <div class="row row-no-margin">
-                <!-- Product item-->
-                <div>
-                    <div class="col s12 col-produc">
-                        <div class="box-product">
-                            <h4>
-                                Pedido #{{ pedido_obj.id }} em {{ pedido_obj.estabelecimento }}
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Entrega</a></h5>
-                                <div class="price">
-                                    {{ pedido_obj.endereco_entrega }}
-                                </div>
+                {% if pedido_obj %}
+                    <!-- Product item-->
+                    <div>
+                        <div class="col s12 col-produc">
+                            <div class="box-product">
+                                <h4>
+                                    Pedido #{{ pedido_obj.id }} em {{ pedido_obj.estabelecimento }}
+                                </h4>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Tempo de Entrega</a></h5>
-                                <div class="price">
-                                    {{ pedido_obj.estabelecimento.configuration.tempo_de_entrega }} min
-                                </div>
-                                <div class="stock-item">Hora do pedido: {{ pedido_obj.published_at }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Total</a></h5>
-                                <div class="price">
-                                    R$ {{ pedido_obj.valor_total|floatformat:2 }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Meu Pedido</a></h5>
-                                <div class="price">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>Produto</th>
-                                                <th>Especificações</th>
-                                                <th>Preço</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {% for itempedido in pedido_obj.itempedido_set.all %}
-                                                <tr>
-                                                    <td>{{ itempedido.produto.nome }}</td>
-                                                    <td>(
-                                                        {% for opc in itempedido.opcionalchoice_set.all %}
-                                                            {{ opc.opcional.nome }},
-                                                        {% empty %}
-                                                            -
-                                                        {% endfor %}
-                                                        )
-                                                    </td>
-                                                    <td>R$ {{ itempedido.valor_total|floatformat:2 }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                            <tr class="subtotal">
-                                                <th>Subtotal</th>
-                                                <td></td>
-                                                {% if pedido_obj %}
-                                                    <th>R$ {{ pedido_obj.subtotal|floatformat:2 }}</th>
-                                                {% endif %}
-                                            </tr>
-                                            <tr class="valor_entrega">
-                                                <td>Valor da entrega</td>
-                                                <td></td>
-                                                {% if pedido_obj %}
-                                                    <td id="valor_entrega">
-                                                        {% if pedido_obj.endereco_entrega.bairro|is_entrega_gratis:pedido_obj.estabelecimento %}
-                                                            R$ 0,00
-                                                        {% else %}
-                                                            R$
-                                                            {{ pedido_obj.endereco_entrega.valor_entrega|floatformat:2 }}
-                                                        {% endif %}
-                                                    </td>
-                                                {% endif %}
-                                            </tr>
-                                            <tr class="total">
-                                                <th>Total</th>
-                                                <td></td>
-                                                {% if pedido_obj %}
-                                                    <th id="total">
-                                                        R$ {{ pedido_obj.valor_total|floatformat:2 }}</th>
-                                                {% endif %}
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Entrega</a></h5>
+                                    <div class="price">
+                                        {{ pedido_obj.endereco_entrega }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Status</a></h5>
-                                <div class="price">
-                                    {% if pedido_obj.status_pedido == 'AGUARDANDO' %}
-                                        <div class="box-simple box-dark same-height">
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            <h5>Aguarde enquanto a loja processa seu pedido.</h5>
-                                        </div>
-                                    {% elif pedido_obj.status_pedido == 'ACEITO' %}
-                                        <div class="box-simple box-dark same-height"
-                                             >
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            <h5>Seu pedido foi aceito pela loja, aguarde o preparo.</h5>
-                                        </div>
-                                    {% elif pedido_obj.status_pedido == 'REJEITADO' %}
-                                        <div class="box-simple box-dark same-height "
-                                             >
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            <h5>Seu pedido foi rejeitado pela loja.</h5>
-                                        </div>
-                                    {% elif pedido_obj.status_pedido == 'PREPARANDO' %}
-                                        <div class="box-simple box-dark same-height "
-                                             >
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            <h5>Seu pedido já está sendo preparado.</h5>
-                                        </div>
-                                    {% elif pedido_obj.status_pedido == 'ENTREGANDO' %}
-                                        <div class="box-simple box-dark bg-green same-height"
-                                            >
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            <h5>Seu pedido saiu para a entrega.</h5>
-                                        </div>
-                                    {% else %}
-                                        <div class="box-simple box-dark same-height">
-                                            <h4>{{ pedido_obj.status_pedido }}</h4>
-                                            {% if not pedido_obj.estabelecimento.avaliacao_set.all|ja_avaliou:pedido_obj.cliente %}
-                                                <p><a href="{% url 'add_avaliacao' pedido_obj.pk %}"
-                                                      class="btn btn-primary btn-block btn-lg">AVALIAR PEDIDO</a>
-                                                </p>
-
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Tempo de Entrega</a></h5>
+                                    <div class="price">
+                                        {{ pedido_obj.estabelecimento.configuration.tempo_de_entrega }} min
+                                    </div>
+                                    <div class="stock-item">Hora do pedido: {{ pedido_obj.published_at }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Motoboy</a></h5>
-                                <div class="price">
-                                    {% if pedido_obj.pedido.motorista %}
-                                        <div class="row">
-                                            <div class="col 12">
-                                                <div class="span3 well">
-                                                    <center>
-                                                        <a href="#">
-                                                            {% if motorista.photo %}
-                                                                <img src="{{ pedido_obj.pedido.motorista.motorista.photo }}"
-                                                                     name="aboutme" width="140" height="140"
-                                                                     class="img-circle">
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Total</a></h5>
+                                    <div class="price">
+                                        R$ {{ pedido_obj.valor_total|floatformat:2 }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Meu Pedido</a></h5>
+                                    <div class="price">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th>Produto</th>
+                                                    <th>Especificações</th>
+                                                    <th>Preço</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for itempedido in pedido_obj.itempedido_set.all %}
+                                                    <tr>
+                                                        <td>{{ itempedido.produto.nome }}</td>
+                                                        <td>(
+                                                            {% for opc in itempedido.opcionalchoice_set.all %}
+                                                                {{ opc.opcional.nome }},
+                                                                {% empty %}
+                                                                -
+                                                            {% endfor %}
+                                                            )
+                                                        </td>
+                                                        <td>R$ {{ itempedido.valor_total|floatformat:2 }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr class="subtotal">
+                                                    <th>Subtotal</th>
+                                                    <td></td>
+                                                    {% if pedido_obj %}
+                                                        <th>R$ {{ pedido_obj.subtotal|floatformat:2 }}</th>
+                                                    {% endif %}
+                                                </tr>
+                                                <tr class="valor_entrega">
+                                                    <td>Valor da entrega</td>
+                                                    <td></td>
+                                                    {% if pedido_obj %}
+                                                        <td id="valor_entrega">
+                                                            {% if pedido_obj.endereco_entrega.bairro|is_entrega_gratis:pedido_obj.estabelecimento %}
+                                                                R$ 0,00
                                                             {% else %}
-                                                                <img src="{{ pedido_obj.pedido.motorista.motorista.photo }}"
-                                                                     name="aboutme" width="140" height="140"
-                                                                     class="img-circle">
-
+                                                                R$
+                                                                {{ pedido_obj.endereco_entrega.valor_entrega|floatformat:2 }}
                                                             {% endif %}
-                                                        </a>
-                                                        <h3>{{ pedido_obj.pedido.motorista.first_name }}</h3>
-                                                        <h3>
-                                                            Placa: {{ pedido_obj.pedido.motorista.motorista.placa }}</h3>
-                                                        <h4>
-                                                            <span><strong>Rotas Realizadas: {{ pedido_obj.pedido.motorista.pedido_set.all|length }}</strong></span>
-                                                        </h4>
-                                                        <p class="text-center">
-                                                            <span><strong>Media Avaliacao: {{ pedido_obj.pedido.motorista.classification_set.all|soma_avaliacao|floatformat:2 }}</strong></span>
-                                                        </p>
-                                                    </center>
-                                                </div>
-                                            </div>
+                                                        </td>
+                                                    {% endif %}
+                                                </tr>
+                                                <tr class="total">
+                                                    <th>Total</th>
+                                                    <td></td>
+                                                    {% if pedido_obj %}
+                                                        <th id="total">
+                                                            R$ {{ pedido_obj.valor_total|floatformat:2 }}</th>
+                                                    {% endif %}
+                                                </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <hr/>
-                                    {% else %}
-                                        <div class="row">
-                                            {% if not pedido_obj.status_pedido == 'REJEITADO' %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Status</a></h5>
+                                    <div class="price">
+                                        {% if pedido_obj.status_pedido == 'AGUARDANDO' %}
+                                            <div class="box-simple box-dark same-height">
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                <h5>Aguarde enquanto a loja processa seu pedido.</h5>
+                                            </div>
+                                        {% elif pedido_obj.status_pedido == 'ACEITO' %}
+                                            <div class="box-simple box-dark same-height"
+                                            >
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                <h5>Seu pedido foi aceito pela loja, aguarde o preparo.</h5>
+                                            </div>
+                                        {% elif pedido_obj.status_pedido == 'REJEITADO' %}
+                                            <div class="box-simple box-dark same-height "
+                                            >
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                <h5>Seu pedido foi rejeitado pela loja.</h5>
+                                            </div>
+                                        {% elif pedido_obj.status_pedido == 'PREPARANDO' %}
+                                            <div class="box-simple box-dark same-height "
+                                            >
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                <h5>Seu pedido já está sendo preparado.</h5>
+                                            </div>
+                                        {% elif pedido_obj.status_pedido == 'ENTREGANDO' %}
+                                            <div class="box-simple box-dark bg-green same-height"
+                                            >
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                <h5>Seu pedido saiu para a entrega.</h5>
+                                            </div>
+                                        {% else %}
+                                            <div class="box-simple box-dark same-height">
+                                                <h4>{{ pedido_obj.status_pedido }}</h4>
+                                                {#                                            {% if not pedido_obj.estabelecimento.avaliacao_set.all|ja_avaliou:pedido_obj.cliente %}#}
+                                                {#                                                <p><a href="{% url 'add_avaliacao' pedido_obj.pk %}"#}
+                                                {#                                                      class="btn btn-primary btn-block btn-lg">AVALIAR PEDIDO</a>#}
+                                                {#                                                </p>#}
+                                                {##}
+                                                {#                                            {% endif %}#}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Motoboy</a></h5>
+                                    <div class="price">
+                                        {% if pedido_obj.pedido.motorista %}
+                                            <div class="row">
                                                 <div class="col 12">
                                                     <div class="span3 well">
                                                         <center>
-                                                            <h5><u>Aguardando Motoboy...</u></h5>
+                                                            <a href="#">
+                                                                {% if motorista.photo %}
+                                                                    <img src="{{ pedido_obj.pedido.motorista.motorista.photo }}"
+                                                                         name="aboutme" width="140" height="140"
+                                                                         class="img-circle">
+                                                                {% else %}
+                                                                    <img src="{{ pedido_obj.pedido.motorista.motorista.photo }}"
+                                                                         name="aboutme" width="140" height="140"
+                                                                         class="img-circle">
+
+                                                                {% endif %}
+                                                            </a>
+                                                            <h3>{{ pedido_obj.pedido.motorista.first_name }}</h3>
+                                                            <h3>
+                                                                Placa: {{ pedido_obj.pedido.motorista.motorista.placa }}</h3>
+                                                            <h4>
+                                                                <span><strong>Rotas Realizadas: {{ pedido_obj.pedido.motorista.pedido_set.all|length }}</strong></span>
+                                                            </h4>
+                                                            <p class="text-center">
+                                                                <span><strong>Media Avaliacao:
+                                                                    {{ pedido_obj.pedido.motorista.classification_set.all|soma_avaliacao|floatformat:2 }}</strong></span>
+                                                            </p>
                                                         </center>
                                                     </div>
                                                 </div>
-                                            {% endif %}
-                                        </div>
-                                        <hr/>
-                                    {% endif %}
+                                            </div>
+                                            <hr/>
+                                        {% else %}
+                                            <div class="row">
+                                                {% if not pedido_obj.status_pedido == 'REJEITADO' %}
+                                                    <div class="col 12">
+                                                        <div class="span3 well">
+                                                            <center>
+                                                                <h5><u>Aguardando Motoboy...</u></h5>
+                                                            </center>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <hr/>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="col s12 m4 l3 col-produc">
-                        <div class="box-product">
-                            <div class="bp-top">
-                                <h5><a href="#">Telefone da Empresa</a></h5>
-                                <div class="price">
-                                    {{ pedido_obj.estabelecimento.phone }}
+                    <div>
+                        <div class="col s12 m4 l3 col-produc">
+                            <div class="box-product">
+                                <div class="bp-top">
+                                    <h5><a href="#">Telefone da Empresa</a></h5>
+                                    <div class="price">
+                                        {{ pedido_obj.estabelecimento.phone }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    <!-- Product item-->
+                    <div>
+                        <div class="col s12 col-produc">
+                            <div class="box-product">
+                                <h4>
+                                    Pedido foi REJEITADO.
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
             </div>
         </div>
     </div>

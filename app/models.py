@@ -135,6 +135,7 @@ class ConfigAdmin(TimeStamped):
 
 
 class Estabelecimento(TimeStamped, BaseAddress):
+    creditos = models.CharField(max_length=10, blank=True, null=True, default='0.00')
     configuration = models.OneToOneField(Configuration, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     is_approved = models.BooleanField(default=False)
@@ -172,6 +173,47 @@ class Estabelecimento(TimeStamped, BaseAddress):
             ("view_dashboard_3", "Loja pode ver o dashboard loja tipo 3"),
             ("view_chat", "Loja pode interagir no Chat"),
         )
+
+
+class Credito(TimeStamped):
+    valor = models.CharField(max_length=10, blank=True, null=True, default='0.00')
+    estabelecimento = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE)
+
+
+class Debito(TimeStamped):
+    valor = models.CharField(max_length=10, blank=True, null=True, default='0.00')
+    estabelecimento = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE)
+
+
+tipo_operacao = (
+    ('CREDITO', 'CREDITO'),
+    ('DEBITO', 'DEBITO')
+)
+
+
+class Operacao(TimeStamped):
+    class Meta:
+        verbose_name = u'Operacao'
+        verbose_name_plural = u'Operacoes'
+
+    tipo = models.CharField(max_length=50, choices=tipo_operacao)
+    valor = models.CharField(max_length=10, blank=True, null=True, default='0.00')
+    favorecido = models.ForeignKey(Estabelecimento, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return u'Operacao'
+
+    def __unicode__(self):
+        return u'Operacao'
+
+    def save(self, *args, **kwargs):
+        if self.tipo == 'CREDITO':
+            credito = Credito(valor=str(self.valor), estabelecimento=self.favorecido)
+            credito.save()
+        else:
+            debito = Debito(valor=str(self.valor), estabelecimento=self.favorecido)
+            debito.save()
+        super(Operacao, self).save(*args, **kwargs)
 
 
 class Pedido(TimeStamped):
@@ -598,7 +640,8 @@ class ItemPedido(TimeStamped):
         valor_opcionais = 0.0
         if self.opcionalchoice_set.first():
             for opc in self.opcionalchoice_set.all():
-                valor_opcionais = float(valor_opcionais) + float(str(opc.opcional.valor).replace(',', '.').replace(" ", ""))
+                valor_opcionais = float(valor_opcionais) + float(
+                    str(opc.opcional.valor).replace(',', '.').replace(" ", ""))
         valor_unitario = float(valor_base) + float(valor_opcionais)
         self.valor_total = format(float(float(valor_unitario) * float(self.quantidade)), '.2f')
         super(ItemPedido, self).save(*args, **kwargs)

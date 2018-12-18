@@ -9,6 +9,58 @@ from app.views.geocoding import calculate_matrix_distance
 register = template.Library()
 
 
+def soma_val(values):
+    v_total = 0.00
+    if values:
+        for v in values:
+            v_total = v_total + float(v.valor)
+    return round(v_total, 2)
+
+
+def get_saldo_est(est):
+    creditos = soma_val(est.credito_set.all())
+    debitos = soma_val(est.debito_set.all())
+    est.creditos = format(round(float(creditos - debitos), 2), '.2f')
+    est.save()
+    return est.creditos
+
+
+def check_chamada(saldo, valor_entrega):
+    return float(saldo) - float(valor_entrega) >= float(0.00)
+
+
+@register.filter
+def get_valor_entrega(valor_bairro):
+    try:
+        return round(float(valor_bairro) + float(0.50), 2)
+    except (ValueError, ZeroDivisionError, Exception):
+        return round(float(7.00) + float(0.50), 2)
+
+
+@register.filter
+def get_saldo(est):
+    try:
+        creditos = soma_val(est.credito_set.all())
+        debitos = soma_val(est.debito_set.all())
+        est.creditos = format(round(float(creditos - debitos), 2), '.2f')
+        print(est.creditos)
+        est.save()
+        return est.creditos
+    except (ValueError, ZeroDivisionError, Exception):
+        return 0.00
+
+
+@register.filter
+def has_saldo(est, valor_entrega):
+    try:
+        saldo = get_saldo_est(est)
+        if check_chamada(saldo, valor_entrega):
+            return True
+        return False
+    except (ValueError, ZeroDivisionError, Exception):
+        return False
+
+
 @register.filter
 def is_madrugada(user):
     try:

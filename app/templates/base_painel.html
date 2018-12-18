@@ -110,6 +110,11 @@
             </a>
 
             <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#exampleModal">ASSINAR</a>
+                    </li>
+                </ul>
                 {% if user.estabelecimento.configuration.plan == 'PREMIUM' %}
                     <ul class="nav navbar-nav">
                         {% if user.estabelecimento %}
@@ -138,7 +143,8 @@
                                                         </div>
                                                         <h4>
                                                             <small><i
-                                                                    class="fa fa-clock-o"></i> {{ message.created_at|date:"G:i" }}
+                                                                    class="fa fa-clock-o"></i>
+                                                                {{ message.created_at|date:"G:i" }}
                                                             </small>
                                                         </h4>
                                                         <p>{{ message.text }}</p>
@@ -169,7 +175,7 @@
                                                         Pedido #{{ ped.pk }} está em andamento.
                                                     </a>
                                                 </li>
-                                            {% empty %}
+                                                {% empty %}
                                                 <li>
                                                     <a href="#">
                                                         Nenhum pedido em andamento
@@ -210,7 +216,8 @@
                                                             </div>
                                                             <h4>
                                                                 <small><i
-                                                                        class="fa fa-clock-o"></i> {{ message.created_at|date:"G:i" }}
+                                                                        class="fa fa-clock-o"></i>
+                                                                    {{ message.created_at|date:"G:i" }}
                                                                 </small>
                                                             </h4>
                                                             <p>{{ message.text }}</p>
@@ -279,7 +286,7 @@
                                                     </h3>
                                                 </a>
                                             </li>
-                                        {% empty %}
+                                            {% empty %}
                                             <li><!-- Task item -->
                                                 <a href="#">
                                                     <h3>
@@ -361,6 +368,7 @@
         <section class="sidebar">
             <!-- Sidebar user panel -->
             <div class="user-panel">
+
                 <div class="pull-left image">
                     {% if user.motorista %}
                         {% if user.motorista.photo %}
@@ -410,6 +418,7 @@
                 {% else %}
                     <div class="pull-left info">
                         <p>{{ user.first_name }} {{ user.last_name }}</p>
+
                         {% if user.estabelecimento.is_online %}
                             <div class="checkbox checbox-switch switch-success">
                                 <label>
@@ -437,13 +446,19 @@
                         </script>
                     </div>
                 {% endif %}
-
             </div>
             <form action="#" method="get" class="sidebar-form">
+                {% if user.estabelecimento %}
+                    <div class="info white bg-white">
+                        <b style="color: #ffffff;">Créditos: R$ {{ user.estabelecimento|get_saldo }}</b>
+                    </div>
+                {% endif %}
             </form>
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
                 <li class="header">MENU</li>
+                <li><a href="#" data-toggle="modal" data-target="#recarga">
+                    <i class="fa fa-money"></i> Recarga</a></li>
                 {% if user.motorista %}
                     {% if user.motorista.configuration.plano == 'PREMIUM' %}
                         <li id="pedidos" class="motorista">
@@ -669,8 +684,231 @@
 
         <!-- Main content -->
         <section class="content">
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title text-center" id="exampleModalLabel">Escolha sua
+                                Assinatura:</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div class="row">
+                                <div class="col-md-6">
+
+
+                                    <a mp-mode="dftl" href="http://mpago.la/3iwptK" name="MP-payButton"
+                                       class='red-ar-l-rn-undefined'>BASICO</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+
+
+                                </div>
+                                <div class="col-md-6">
+
+                                    <a mp-mode="dftl" href="http://mpago.la/3BUa24" name="MP-payButton"
+                                       class='red-ar-l-rn-undefined'>PREMIUM</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('a').click(function () {
+                                                $('#exampleModal').modal('hide');
+                                            });
+                                        })
+                                    </script>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar
+                            </button>
+                            {#                                        <button type="button" class="btn btn-primary">Save changes</button>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="recarga" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title text-center" id="exampleModalLabel">Escolha sua Recarga</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <a mp-mode="dftl"
+                                       href="https://www.mercadopago.com/mlb/checkout/start?pref_id=168339654-94192eaf-4c7f-4098-94a8-ace03038d48d"
+                                       name="MP-payButton" class='red-ar-l-ov-brall'>R$ 20</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+                                </div>
+                                <div class="col-md-4">
+                                    <a mp-mode="dftl"
+                                       href="https://www.mercadopago.com/mlb/checkout/start?pref_id=168339654-dd14ff3d-7ed7-480f-8e9f-62b1aa89077d"
+                                       name="MP-payButton" class='red-ar-l-ov-brall'>R$ 50</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+                                </div>
+                                <div class="col-md-4">
+                                    <a mp-mode="dftl"
+                                       href="https://www.mercadopago.com/mlb/checkout/start?pref_id=168339654-cbfdca6b-b56d-4e04-9d98-b9fe3d4a4a1d"
+                                       name="MP-payButton" class='red-ar-l-ov-brall'>R$ 75</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+                                </div>
+                                <div class="col-md-4">
+                                    <a mp-mode="dftl"
+                                       href="https://www.mercadopago.com/mlb/checkout/start?pref_id=168339654-6b8c267e-8e9c-49b4-a05d-971c9e4b5008"
+                                       name="MP-payButton" class='red-ar-l-ov-brall'>R$ 100</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+                                </div>
+                                <div class="col-md-4">
+                                    <a mp-mode="dftl"
+                                       href="https://www.mercadopago.com/mlb/checkout/start?pref_id=168339654-5698ea4c-d1f0-44d1-9746-fb166c18626e"
+                                       name="MP-payButton" class='red-ar-l-ov-brall'>R$ 200</a>
+                                    <script type="text/javascript">
+                                        (function () {
+                                            function $MPC_load() {
+                                                window.$MPC_loaded !== true && (function () {
+                                                    var s = document.createElement("script");
+                                                    s.type = "text/javascript";
+                                                    s.async = true;
+                                                    s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                    var x = document.getElementsByTagName('script')[0];
+                                                    x.parentNode.insertBefore(s, x);
+                                                    window.$MPC_loaded = true;
+                                                })();
+                                            }
+
+                                            window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                        })();
+                                    </script>
+                                </div>
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('a').click(function () {
+                                        $('#exampleModal').modal('hide');
+                                        $('#recarga').modal('hide');
+                                    });
+                                })
+                            </script>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar
+                            </button>
+                            {#                                        <button type="button" class="btn btn-primary">Save changes</button>#}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Small boxes (Stat box) -->
             {% block content %}
+
                 {% include 'loading.html' %}
 
             {% endblock %}
@@ -734,7 +972,33 @@
         var thissound = document.getElementById(soundobj);
         thissound.play();
     }
+
+    var idleTime = 0;
+    $(document).ready(function () {
+        //Increment the idle time counter every minute.
+        var idleInterval = setInterval(timerIncrement, 60000); // 60 s
+
+        //Zero the idle timer on mouse movement.
+        $(this).click(function (e) {
+            console.log('evt click');
+            idleTime = 0;
+        });
+        $(this).keypress(function (e) {
+            console.log('evt key');
+            idleTime = 0;
+        });
+    });
+
+    function timerIncrement() {
+        idleTime = idleTime + 1;
+        console.log('idle: ', idleTime);
+        if (idleTime > 5) { // 5min
+            console.log('logout');
+            window.location.href = '/logout';
+        }
+    }
 </script>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -957,7 +1221,7 @@
         {% else %}
             <script>
                 $(document).ready(function () {
-{#                    play('alert');#}
+                    {#                    play('alert');#}
                     swal("Sucesso", "{{ message }}", "success")
                 });
             </script>

@@ -21,7 +21,7 @@ from django.views.generic import UpdateView
 
 from app.forms import PontoFormSet, PontoFormUpdateSet
 from app.mixins.CustomContextMixin import RedirectMotoristaOcupadoView, CustomContextMixin
-from app.models import Pedido, Estabelecimento, Motorista, Notification, Ponto, Classification, Bairro
+from app.models import Pedido, Estabelecimento, Motorista, Notification, Ponto, Classification, Bairro, Operacao
 from app.views.fcm import func
 from app.views.snippet_template import render_block_to_string
 from app.views.script_tools import logger
@@ -75,11 +75,15 @@ def select_motoboy_fixo_painel(request, pk):
         return HttpResponseRedirect('/app/pedidos/motorista/')
     else:
         a = func()
+        valor_corrida = float(pedido.valor_total) + float(0.50 * int(len(pedido.ponto_set.all())))
+        debito = Operacao(tipo='DEBITO', valor=valor_corrida, favorecido=pedido.estabelecimento)
+        debito.save()
         pedido.status = False
         pedido.motorista = motorista.user
         pedido.save()
         motorista.ocupado = True
         motorista.save()
+
         try:
             logger(request.user, "Aceitou fazer a Rota #" + str(pedido.pk))
         except (Exception,):
@@ -101,11 +105,15 @@ def select_motoboy_fixo_cozinha(request, pk):
         return HttpResponseRedirect('/app/pedidos/motorista/')
     else:
         a = func()
+        valor_corrida = float(pedido.valor_total) + float(0.50 * int(len(pedido.ponto_set.all())))
+        debito = Operacao(tipo='DEBITO', valor=valor_corrida, favorecido=pedido.estabelecimento)
+        debito.save()
         pedido.status = False
         pedido.motorista = motorista.user
         pedido.save()
         motorista.ocupado = True
         motorista.save()
+
         try:
             logger(request.user, "Aceitou fazer a Rota #" + str(pedido.pk))
         except (Exception,):
@@ -461,6 +469,9 @@ def accept_corrida(request, pk_pedido):
             pedido.status = False
             pedido.motorista = request.user
             pedido.save()
+            valor_corrida = float(pedido.valor_total) + float(0.50*int(len(pedido.ponto_set.all())))
+            debito = Operacao(tipo='DEBITO', valor=valor_corrida, favorecido=pedido.estabelecimento)
+            debito.save()
             motorista = Motorista.objects.get(user=request.user)
             motorista.ocupado = True
             motorista.save()

@@ -13,10 +13,35 @@ from django.views.generic import TemplateView
 from django.views.generic import UpdateView
 
 from app.forms import FormRequest, GrupoUpdateFormSet, ItemPedidoFormSet
-from app.models import Notificacao, Pedido, Request, Ponto, Notification, FolhaPagamento, ItemPagamento, Chamado
+from app.models import Notificacao, Pedido, Request, Ponto, Notification, FolhaPagamento, ItemPagamento, Chamado, \
+    Estabelecimento
 from app.views.fcm import func
 from app.views.snippet_template import render_block_to_string
 from app.views.script_tools import logger
+
+
+def soma_val(values):
+    v_total = 0.00
+    for v in values:
+        v_total = v_total + float(v.valor)
+    return round(v_total, 2)
+
+
+def get_saldo(estabelecimento_pk):
+    est = Estabelecimento.objects.get(pk=estabelecimento_pk)
+    creditos = soma_val(est.credito_set.all())
+    debitos = soma_val(est.debito_set.all())
+    est.creditos = round(float(creditos - debitos), 2)
+    est.save()
+    return round(float(creditos - debitos), 2)
+
+
+def save_saldo(estabelecimento_pk):
+    est = Estabelecimento.objects.get(pk=estabelecimento_pk)
+    creditos = soma_val(est.credito_set.all())
+    debitos = soma_val(est.debito_set.all())
+    est.creditos = round(float(creditos - debitos), 2)
+    est.save()
 
 
 @require_http_methods(["GET"])
@@ -54,7 +79,7 @@ def make_itens(req):
         dic = {}
         for it in req.itempedido_set.all():
             p = it.produto
-            message += ("<br/><b>" + str(p.nome)) +"</b><br/>"
+            message += ("<br/><b>" + str(p.nome)) + "</b><br/>"
             for opcc in it.opcionalchoice_set.all():
                 opc = opcc.opcional
                 if str(opc.grupo.titulo) in dic:
@@ -73,7 +98,7 @@ def make_itens(req):
         dic = {}
         for it in req.itempedido_set.all():
             p = it.produto
-            message += ("<br/><b>" + unicode(p.nome))+"</b>"
+            message += ("<br/><b>" + unicode(p.nome)) + "</b>"
             for opc in it.opcionalchoice_set.all():
                 if unicode(opc.opcional.grupo.titulo) in dic:
                     dic[unicode(opc.opcional.grupo.titulo)] += [opc.opcional.nome]
@@ -187,6 +212,9 @@ def cancelar_request(request, pk):
     chamado.save()
     entrega.status_pedido = 'REJEITADO'
     entrega.save()
+    rota = entrega.pedido
+    from app.views.PedidoView import delete_pedido
+    return delete_pedido(request=request, pk=rota.pk)
     try:
         logger(request.user, "Rejeitou o pedido #" + str(entrega.pk))
     except (Exception,):

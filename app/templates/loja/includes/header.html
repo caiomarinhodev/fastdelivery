@@ -31,17 +31,17 @@
                         <div class="row text-center">
                             <div class="col-md-8 col-md-offset-2 ">
 
-                                    <a href="{% url 'meu-carrinho' %}" class="btn btn-danger">
-                                        <i class="fa fa-shopping-cart"></i>Carrinho</a>
-{#                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger#}
-{#                                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
-{#                                                disabled#}
-{#                                                {% endif %}#}
-{#                                                "#}
-{#                                            {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
-{#                                       disabled="disabled"#}
-{#                                            {% endif %}#}
-{#                                    >Finalizar Compra</a>#}
+                                <a href="{% url 'meu-carrinho' %}" class="btn btn-danger">
+                                    <i class="fa fa-shopping-cart"></i>Carrinho</a>
+                                {#                                    <a href="{% url 'finaliza_pedido' %}" class="btn btn-danger#}
+                                {#                                                {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+                                {#                                                disabled#}
+                                {#                                                {% endif %}#}
+                                {#                                                "#}
+                                {#                                            {% if not loja.is_online or not pedido_obj.itempedido_set.first %}#}
+                                {#                                       disabled="disabled"#}
+                                {#                                            {% endif %}#}
+                                {#                                    >Finalizar Compra</a>#}
 
                             </div>
                         </div>
@@ -143,6 +143,94 @@ _________________________________________________________ -->
                                 <a id="login" href="{% url 'choose_login' %}">Login</a>
                             </li>
                         {% endif %}
+
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#exampleModal">ASSINAR</a>
+                        </li>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title text-center" id="exampleModalLabel">Escolha sua
+                                            Assinatura:</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+
+                                                <a mp-mode="dftl" href="http://mpago.la/3iwptK" name="MP-payButton"
+                                                   class='red-ar-l-rn-undefined'>BASICO</a>
+                                                <script type="text/javascript">
+                                                    (function () {
+                                                        function $MPC_load() {
+
+                                                            window.$MPC_loaded !== true && (function () {
+                                                                var s = document.createElement("script");
+                                                                s.type = "text/javascript";
+                                                                s.async = true;
+                                                                s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                                var x = document.getElementsByTagName('script')[0];
+                                                                x.parentNode.insertBefore(s, x);
+                                                                window.$MPC_loaded = true;
+                                                            })();
+                                                        }
+
+                                                        window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                                    })();
+                                                </script>
+
+
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <a mp-mode="dftl" href="http://mpago.la/3BUa24" name="MP-payButton"
+                                                   class='red-ar-l-rn-undefined'>PREMIUM</a>
+                                                <script type="text/javascript">
+                                                    (function () {
+                                                        function $MPC_load() {
+
+                                                            window.$MPC_loaded !== true && (function () {
+                                                                var s = document.createElement("script");
+                                                                s.type = "text/javascript";
+                                                                s.async = true;
+                                                                s.src = document.location.protocol + "//secure.mlstatic.com/mptools/render.js";
+                                                                var x = document.getElementsByTagName('script')[0];
+                                                                x.parentNode.insertBefore(s, x);
+                                                                window.$MPC_loaded = true;
+                                                            })();
+                                                        }
+
+                                                        window.$MPC_loaded !== true ? (window.attachEvent ? window.attachEvent('onload', $MPC_load) : window.addEventListener('load', $MPC_load, false)) : null;
+                                                    })();
+                                                </script>
+
+                                                <script>
+                                                    $(document).ready(function(){
+                                                        $('a').click(function(){
+                                                            $('#exampleModal').modal('hide');
+                                                        });
+                                                    })
+                                                </script>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar
+                                        </button>
+                                        {#                                        <button type="button" class="btn btn-primary">Save changes</button>#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </ul>
 
                 </div>

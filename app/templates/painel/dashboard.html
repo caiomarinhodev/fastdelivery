@@ -82,7 +82,7 @@
                                         <th>CRIADO EM</th>
                                         <th>STATUS</th>
                                         <th></th>
-                                        {#                                        <th></th>#}
+                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -100,26 +100,20 @@
                                             <td>{{ pedido.created_at|date:"d/m/Y" }}</td>
                                             <td>{{ pedido.status_pedido }}</td>
                                             <td>
-                                                <a href="{% url 'print_pedido' pedido.id %}" target="_blank" class="btn btn-warning btn-block">
+                                                <a href="{% url 'print_pedido' pedido.id %}" target="_blank"
+                                                   class="btn btn-warning btn-block">
                                                     IMPRIMIR
                                                 </a>
                                             </td>
-                                            {#                                            <td>#}
-                                            {#                                                {% if not pedido.status_pedido == 'ENTREGUE' and not pedido.status_pedido == 'REJEITADO' %}#}
-                                            {#                                                    <div class="col-xs-12">#}
-                                            {#                                                        <a href="{% url 'rejeitar_request' pedido.pk %}"#}
-                                            {#                                                           class="btn btn-danger"><i class="fa fa-trash"></i> </a>#}
-                                            {#                                                    </div>#}
-                                            {#                                                    <hr/>#}
-                                            {#                                                {% endif %}#}
-                                            {#                                                <div class="col-xs-12">#}
-                                            {#                                                    <a href="{% url 'edit_request' pedido.pk %}"#}
-                                            {#                                                       class="btn btn-primary">#}
-                                            {#                                                        <i class="fa fa-edit"></i>#}
-                                            {#                                                    </a>#}
-                                            {#                                                </div>#}
-                                            {##}
-                                            {#                                            </td>#}
+                                            <td>
+                                                {% if not pedido.status_pedido == 'ENTREGUE' and not pedido.status_pedido == 'REJEITADO' %}
+                                                    <div class="col-xs-12">
+                                                        <a href="{% url 'rejeitar_request' pedido.pk %}"
+                                                           class="btn btn-danger"><i class="fa fa-trash"></i> </a>
+                                                    </div>
+                                                    <hr/>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

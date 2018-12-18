@@ -225,7 +225,12 @@ class AcompanharRequestApp(LoginRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         if 'pedido' in self.request.session:
             del self.request.session['pedido']
-        return super(AcompanharRequestApp, self).get(request, *args, **kwargs)
+        try:
+            self.object = self.get_object()
+        except (Exception,):
+            self.object = None
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
 
 
 class MeusRequestsApp(LoginRequiredMixin, TemplateView, LojaFocusMixin):
