@@ -311,7 +311,7 @@ urlpatterns = [
 
     url('', include('pwa.urls')),
 
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^sobre/$', SobreView.as_view(), name='about'),
 
