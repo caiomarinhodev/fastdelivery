@@ -25,4 +25,4 @@ pycpfcnpj
 django-progressive-web-app
 djangorestframework
 markdown
-
+psycopg2-binary
