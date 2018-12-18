@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from rest_framework import routers
 
+
 from api import views as views_api
 from api.views import UserViewSet, BairroViewSet, ConfigurationViewSet, ItemPedidoViewSet, \
     OpcionalChoiceViewSet, EnderecoViewSet, RequestViewSet, ListMyRequests, ClienteViewSet, ListMyAddress
